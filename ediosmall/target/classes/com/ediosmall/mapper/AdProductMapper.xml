@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.AdProductMapper">
+
+	<select id="getCategoryList" resultType="com.ediosmall.domain.CategoryVO">
+		select cat_code, cat_code_prt, cat_name 
+		  from category_tbl
+		 where cat_code_prt is null
+	</select>
+	
+	<select id="getSubCategoryList" resultType="com.ediosmall.domain.CategoryVO">
+		select cat_code, cat_code_prt, cat_name 
+		  from category_tbl 
+		 where cat_code_prt = #{cat_code}
+	</select>
+	
+
+	<insert id="product_insert">	
+		insert 	into PRODUCTEI_TBL
+				(
+					PDTEI_NUM, CAT_CODE, CAT_CODE_PRT, PDTEI_NAME, PDTEI_PRICE, 
+					PDTEI_DISCOUNT, PDTEI_PRODUCER, PDTEI_DETAIL, PDTEI_IMAGE, PDTEI_AMOUNT, PDTEI_BUY
+				)
+				
+		values	(
+					seq_pdtei_num.nextval, #{cat_code}, #{cat_code_prt}, #{pdtei_name}, 
+					#{pdtei_price}, #{pdtei_discount}, #{pdtei_producer}, #{pdtei_detail}, 
+					#{pdtei_image}, #{pdtei_amount}, #{pdtei_buy}
+				)
+	</insert>
+	
+	<update id="product_modifyOk">
+		update productei_tbl		
+		   set cat_code = #{cat_code},
+		   	   cat_code_prt = #{cat_code_prt},
+		   	   pdtei_name = #{pdtei_name},
+		   	   pdtei_price = #{pdtei_price},
+		   	   pdtei_discount = #{pdtei_discount},
+		   	   pdtei_producer = #{pdtei_producer},
+		   	   pdtei_detail = #{pdtei_detail},
+		   	   pdtei_image = #{pdtei_image},
+		   	   pdtei_amount = #{pdtei_amount},
+		   	   pdtei_buy = #{pdtei_buy},
+		   	   pdtei_date_up = sysdate
+		   
+		 where pdtei_num = #{pdtei_num}
+	</update>
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=")  and" prefixOverrides="OR" > 
+	       <foreach item="type" collection="typeArr">
+	         <trim prefix="OR">	
+		       	<choose>
+		       		<when test="type == 'N'.toString()">
+		       			pdtei_name like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'D'.toString()">
+		       			pdtei_detail like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'C'.toString()">
+		       			pdtei_producer like '%' || #{keyword} || '%'
+		       		</when>
+		       	</choose>
+	         </trim>
+	       </foreach> 
+	    </trim>	
+	</sql>
+	
+	<select id="product_list" resultType="com.ediosmall.domain.ProductVO">
+		<![CDATA[ 
+		select 
+		       pdtei_num, cat_code, cat_code_prt, pdtei_name, 
+		       pdtei_price, pdtei_discount, pdtei_producer, pdtei_detail, 
+		       pdtei_image, pdtei_amount, pdtei_buy, pdtei_date_sub, pdtei_date_up 
+		  from 
+		      (
+		       select /*+ index_desc(productei_tbl pk_product) */ rownum rn, 
+		              pdtei_num, cat_code, cat_code_prt, pdtei_name, 
+		              pdtei_price, pdtei_discount, pdtei_producer, pdtei_detail, 
+		              pdtei_image, pdtei_amount, pdtei_buy, pdtei_date_sub, pdtei_date_up 
+		         from productei_tbl 
+		        where pdtei_num > 0 and 
+		 ]]>
+		 
+		 		<include refid="criteria"></include>       
+		 
+		 <![CDATA[        
+		        	  rownum > 0 and rownum <= #{pageNum} * #{amount}
+		      )
+		 where rn  > (#{pageNum}-1) * #{amount}
+		]]>
+	</select>
+	
+	<select id="getTotalCountProduct" resultType="int">
+		select count(*) 
+		  from productei_tbl
+
+		  where
+		  
+		  	<include refid="criteria"></include>  
+		  	
+		  		<![CDATA[
+		  pdtei_num > 0	
+		 		]]>
+	</select>
+	
+	<select id="product_modify" resultType="com.ediosmall.domain.ProductVO">
+		select * 
+		  from productei_tbl
+		 where pdtei_num = #{pdtei_num} 
+	</select>
+	
+	<delete id="product_deleteOk">
+		delete 
+		  from productei_tbl
+		 where pdtei_num = #{pdtei_num} 
+	</delete>
+
+</mapper>

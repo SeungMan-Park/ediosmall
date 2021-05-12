@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.OrderMapperUi">
+
+	<select id="OrderDetailSeen_Ui" resultType="com.ediosmall.domain.OrderDetailSeenVO">
+		select o.odr_code, o.pdtei_num, p.pdtei_name, 
+		       P.pdtei_image, o.ord_amount, o.ord_price
+		  from productei_tbl p inner join order_detail_table o
+		    on p.pdtei_num = o.pdtei_num
+		 where o.odr_code = #{odr_code}
+	</select>
+
+	<sql id="criteria">
+		<trim prefix="(" suffix=")  and" prefixOverrides="OR" > 
+	       <foreach item="type" collection="typeArr">
+	         <trim prefix="OR">	
+		       	<choose>
+		       		<when test="type == 'N'.toString()">
+		       			pdtei_name like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'D'.toString()">
+		       			pdtei_detail like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'C'.toString()">
+		       			pdtei_producer like '%' || #{keyword} || '%'
+		       		</when>
+		       	</choose>
+	         </trim>
+	       </foreach> 
+	    </trim>	
+	</sql>
+	
+	<select id="orderInfo_list_Ui" resultType="com.ediosmall.domain.OrderVO">
+		<![CDATA[
+		select odr_code, mbei_id, ord_name, ord_zipcode, 
+		       ord_addr1st, ord_addr2nd, ord_phonenum, ord_price, ord_date
+		  from
+		      (
+		        select /*+ index_desc(order_tbl pk_order) */ rownum rn,
+		               odr_code, mbei_id, ord_name, ord_zipcode, 
+		               ord_addr1st, ord_addr2nd, ord_phonenum, ord_price, ord_date
+		          from order_tbl
+		         where odr_code > 0 and 
+		                 rownum > 0 and 
+                         rownum <= #{cri.pageNum} * #{cri.amount} and
+                         mbei_id = #{mbei_id}
+		      )
+		 where rn  > (#{cri.pageNum}-1) * #{cri.amount}
+		]]>
+	</select>
+
+	<select id="getTotalCountOrder_Ui" resultType="int">
+		select count(*) 
+		  from order_tbl
+		 where mbei_id = #{mbei_id}
+	</select>
+	
+	<select id="getOrderInfo_list_UiWithPaging" resultType="com.ediosmall.domain.OrderVO">
+		<![CDATA[
+		select 
+		       odr_code, mbei_id, ord_name, ord_zipcode, 
+		       ord_addr1st, ord_addr2nd, ord_phonenum, ord_price, ord_date
+		  from 
+		  	   (
+		  	   select /*+ index_desc(order_tbl pk_order)*/ rownum rn,
+		  	   		  odr_code, mbei_id, ord_name, ord_zipcode, 
+                      ord_addr1st, ord_addr2nd, ord_phonenum, ord_price, ord_date
+		       	 from order_tbl
+		       	where odr_code = #{odr_code} and
+        	          rownum > 0 and 
+        	          rownum <= #{cri.pageNum} * #{cri.amount} 
+		  	   )
+		 where rn  > (#{cri.pageNum} - 1) * #{cri.amount} 
+		 ]]>	
+	</select>
+		
+	
+</mapper>

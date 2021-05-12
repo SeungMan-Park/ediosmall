@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.OrderMapper">
+
+	<insert id="order_add">
+	
+		<selectKey keyProperty="odr_code" resultType="long" order="BEFORE">		
+			select seq_order_code.nextval from dual
+		</selectKey>
+		
+		insert 
+	      into order_tbl
+	          (
+	            odr_code, mbei_id, ord_name, ord_zipcode, 
+	            ord_addr1st, ord_addr2nd, ord_phonenum, ord_price
+	          )
+	   values 
+	          (
+	            #{odr_code}, #{mbei_id}, #{ord_name}, #{ord_zipcode},
+	            #{ord_addr1st}, #{ord_addr2nd}, #{ord_phonenum}, #{ord_price}            
+	          )
+		
+	</insert>
+	
+	<select id="OrderDetailSeen" resultType="com.ediosmall.domain.OrderDetailSeenVO">
+		select o.odr_code, o.pdtei_num, p.pdtei_name, 
+		       P.pdtei_image, o.ord_amount, o.ord_price
+		  from productei_tbl p inner join order_detail_table o
+		    on p.pdtei_num = o.pdtei_num
+		 where o.odr_code = #{odr_code}
+	</select>
+	
+	<!-- 장바구니테이블에 있는 상품을 기반으로 상품상세테이블 데이터 삽입하기 -->
+	<insert id="orderDetail_add">
+		insert into order_detail_table(odr_code, pdtei_num, ord_amount, ord_price)
+		select #{odr_code}, p.pdtei_num, c.cart_amount, p.pdtei_price
+		  from cart_tbl c inner join productei_tbl p
+		    on c.pdtei_num = p.pdtei_num
+		 where mbei_id = #{mbei_id}
+	</insert>
+	
+	<!-- jsp에서 구매 상품상세정보를 제공받아서 상품상세테이블 데이터 삽입하기 -->
+	<insert id="orderDirect_add">
+		insert into order_detail_table(odr_code, pdtei_num, ord_amount, ord_price)
+		values(#{odr_code}, #{pdtei_num}, #{ord_amount}, #{ord_price})
+	</insert>
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=")  and" prefixOverrides="OR" > 
+	       <foreach item="type" collection="typeArr">
+	         <trim prefix="OR">	
+		       	<choose>
+		       		<when test="type == 'N'.toString()">
+		       			pdtei_name like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'D'.toString()">
+		       			pdtei_detail like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'C'.toString()">
+		       			pdtei_producer like '%' || #{keyword} || '%'
+		       		</when>
+		       	</choose>
+	         </trim>
+	       </foreach> 
+	    </trim>	
+	</sql>
+	
+	<select id="orderInfo_list" resultType="com.ediosmall.domain.OrderVO">
+		<![CDATA[
+		select odr_code, mbei_id, ord_name, ord_zipcode, 
+		       ord_addr1st, ord_addr2nd, ord_phonenum, ord_price, ord_date
+		  from
+		      (
+		        select /*+ index_desc(order_tbl pk_order) */ rownum rn,
+		               odr_code, mbei_id, ord_name, ord_zipcode, 
+		               ord_addr1st, ord_addr2nd, ord_phonenum, ord_price, ord_date
+		          from order_tbl
+		         where odr_code > 0 and 
+		]]>
+		
+						<include refid="criteria"></include>
+		
+		<![CDATA[                
+		                 rownum > 0 and rownum <= #{pageNum} * #{amount}
+		      )
+		 where rn  > (#{pageNum}-1) * #{amount}		
+		]]>	 
+	</select>
+
+	<select id="getTotalCountOrder" resultType="int">
+		select count(*) 
+		  from order_tbl
+		  where
+		  	<include refid="criteria"></include>  
+		<![CDATA[
+		  odr_code > 0	
+		]]>
+	</select>
+	
+	<select id="order_sale" resultType="com.ediosmall.dto.OrderSaleDTO">
+		<![CDATA[
+		select to_char(b.dt, 'YYYY-MM-DD') as hiredate, to_char(b.dt,'DY') as day, nvl(a.cnt,0) as cnt
+		from (
+		        select to_char(hire_date, 'YYYY-MM-DD') as hiredate, count(*) as cnt
+		        from employees
+		        where hire_date between to_date(#{startDate},'YYYY-MM-DD') and to_date(#{endDate},'YYYY-MM-DD')
+		        group by hire_date
+		     ) a
+		     ,
+		     (
+		         select to_date(#{startDate},'YYYY-MM-DD') + level  - 1 as dt
+		        from dual
+		        connect by level <= (to_date(#{endDate},'YYYY-MM-DD') - to_date(#{startDate},'YYYY-MM-DD')+ 1)
+		     ) b
+		where b.dt = a.hiredate(+)
+		order by b.dt	
+		]]>
+	</select>	
+	
+	<select id="order_sale_hit" resultType="com.ediosmall.dto.Order_Sale_HitDTO">
+		select 
+		       max(p.pdtei_name) as name, 
+		       max(o.pdtei_num) as code, 
+		       sum(o.ord_amount) as amount
+		  from order_detail_table o inner join productei_tbl p
+		    on o.pdtei_num = p.pdtei_num
+		 group by o.pdtei_num 	
+	</select>
+	
+</mapper>

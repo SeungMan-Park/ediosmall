@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.MemberMapper">
+
+	<!-- 아이디 중복 체크 -->
+	<select id="checkIdDuplicate" resultType="int">	
+		select count(*)
+		from mbeios_tbl			
+		where mbei_id = #{mbei_id}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="join">
+		insert into mbeios_tbl(MBEI_ID, MBEI_NAME, MBEI_PASSWORD, MBEI_EMAIL, MBEI_ZIPCODE, 
+			MBEI_ADDR1ST, MBEI_ADDR2ND, MBEI_PHONENUM, MBEI_NICKNAME_U, MBEI_APPROVAL)
+		values(#{mbei_id}, #{mbei_name}, #{mbei_password}, #{mbei_email}, #{mbei_zipcode},
+			#{mbei_addr1st}, #{mbei_addr2nd}, #{mbei_phonenum}, #{mbei_nickname_u}, #{mbei_approval})
+	</insert>
+	
+	<select id="login_ok" resultType="com.ediosmall.domain.MbeiosVO">
+		SELECT * FROM MBEIOS_TBL where MBEI_ID = #{mbei_id}
+	</select>
+	
+	<select id="login_check" resultType="com.ediosmall.domain.MbeiosVO">
+		SELECT * FROM MBEIOS_TBL where MBEI_ID = #{mbei_id}
+	</select>
+	
+	<select id="member_info" resultType="com.ediosmall.domain.MbeiosVO">
+		SELECT * FROM MBEIOS_TBL where MBEI_ID = #{mbei_id}
+	</select>
+	
+	<update id="modifyPOST">
+		update mbeios_tbl
+		
+		    set MBEI_EMAIL = #{mbei_email}
+		    ,   MBEI_ZIPCODE = #{mbei_zipcode}
+		    ,   MBEI_ADDR1ST = #{mbei_addr1st}
+		    ,   MBEI_ADDR2ND = #{mbei_addr2nd}
+		    ,   MBEI_PHONENUM = #{mbei_phonenum}
+		    ,   MBEI_NICKNAME_U = #{mbei_nickname_u}
+		    ,   MBEI_APPROVAL = #{mbei_approval}
+		    ,   MBEI_DATE_UP = sysdate
+		    
+		where MBEI_ID = #{mbei_id}	
+	</update>
+	
+	<delete id="deleteUser">
+		delete from mbeios_tbl
+		where MBEI_ID=#{mbei_id}
+	</delete>
+	
+	<select id="find_id" resultType="String">
+		select MBEI_ID from mbeios_tbl where MBEI_NAME = #{mbei_name}
+	</select>
+	
+	<select id="find_pwd" resultType="com.ediosmall.domain.MbeiosVO">
+		select * from mbeios_tbl where MBEI_ID = #{mbei_id} and MBEI_NAME = #{mbei_name}
+	</select>
+
+	
+	<!-- VO클래스 필드와 테이블컬럼명이 다른 경우 -->	
+	<resultMap type="com.ediosmall.domain.UserInfoVO" id="userinfo">
+	
+		<!-- 
+		mbei_id, mbei_name, mbei_password, mbei_email, mbei_zipcode, 
+		mbei_addr1st, mbei_addr2nd, mbei_phonenum, mbei_nickname_u, mbei_approval, 
+		mbei_earnpoints, mbei_date_sub, mbei_date_up, mbei_date_lastlogin
+		-->
+		
+			<id property="user_id" 					column="mbei_id" />
+			
+			<result property="user_id" 				column="mbei_id" />
+			<result property="user_name" 			column="mbei_name" />
+			<result property="user_password" 		column="mbei_password" />
+			<result property="user_email" 			column="mbei_email" />
+			<result property="user_zipcode" 		column="mbei_zipcode" />
+			
+			<result property="user_addr1st" 		column="mbei_addr1st" />
+			<result property="user_addr2nd" 		column="mbei_addr2nd" />
+			<result property="user_phonenum" 		column="mbei_phonenum" />
+			<result property="user_nickname_u" 		column="mbei_nickname_u" />
+			<result property="user_approval" 		column="mbei_approval" />
+			
+			<result property="user_earnpoints" 		column="mbei_earnpoints" />
+			<result property="user_date_sub" 		column="mbei_date_sub" />
+			<result property="user_date_up" 		column="mbei_date_up" />
+			<result property="user_date_lastlogin"  column="mbei_date_lastlogin" />
+	
+	</resultMap>
+	
+	<select id="userinfo_list" resultMap="userinfo">
+		select 
+			   mbei_id, mbei_name, mbei_password, mbei_email, mbei_zipcode, 
+			   mbei_addr1st, mbei_addr2nd, mbei_phonenum, mbei_nickname_u, mbei_approval, 
+			   mbei_earnpoints, mbei_date_sub, mbei_date_up, mbei_date_lastlogin
+		  from mbeios_tbl	
+	</select>
+	
+	<update id="modify_pw">
+		update mbeios_tbl
+		set mbei_password = #{mbei_password}
+		where mbei_id=#{mbei_id}	
+	</update>
+
+	<update id="pw_search">
+		update mbeios_tbl
+		set mbei_password = #{mbei_password}
+		where mbei_id = #{mbei_id}
+	</update>	
+
+</mapper>

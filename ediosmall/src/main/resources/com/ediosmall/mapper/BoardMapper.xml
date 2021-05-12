@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.BoardMapper">
+
+	<sql id="criteria">
+		<trim prefix="(" suffix=")  and" prefixOverrides="OR" > 
+	       <foreach item="type" collection="typeArr">
+	         <trim prefix="OR">	
+	       	<choose>
+	       		<when test="type == 'T'.toString()">
+	       			brd_title like '%' || #{keyword} || '%'
+	       		</when>
+	       		<when test="type == 'C'.toString()">
+	       			brd_contents like '%' || #{keyword} || '%'
+	       		</when>
+	       		<when test="type == 'W'.toString()">
+	       			mbei_id like '%' || #{keyword} || '%'
+	       		</when>
+	       	</choose>
+	         </trim>
+	       </foreach> 
+	    </trim>
+	</sql>
+
+
+	<select id="list" resultType="com.ediosmall.domain.BoardVO">
+		<![CDATA[ 
+			select * 
+			  from board_tbl
+			 where brd_num > 0 and rownum <= 10			
+		]]>
+	</select>
+	
+	<select id="getListWithSearchPaging" resultType="com.ediosmall.domain.BoardVO">
+		<![CDATA[
+			select brd_num, mbei_id, brd_title, brd_contents, brd_date_reg
+			from 
+			(
+				select /*+ index_desc(board_tbl pk_board) */ rownum rn, brd_num, mbei_id, brd_title, brd_contents, brd_date_reg 
+		        from board_tbl 
+		        where  
+	     ]]>
+	       <include refid="criteria"></include>
+	     <![CDATA[    
+	        rownum > 0 and rownum <= #{pageNum} * #{amount}
+	        )
+			where rn  > (#{pageNum}-1) * #{amount}
+		 ]]>	
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+		select count(*) from board_tbl where  
+		<include refid="criteria"></include>
+		<![CDATA[
+		brd_num > 0
+		]]> 		
+	</select>
+	
+	<!-- 사용자모드 게시판 글쓰기 -->
+	<insert id="insert">
+		insert into board_tbl(brd_num, mbei_id, brd_title, brd_contents)
+		values(seq_board.nextval, #{mbei_id} , #{brd_title}, #{brd_contents})	
+	</insert>
+	
+	<!-- 관리자모드 게시판 글쓰기 -->
+	<insert id="adInsert">
+		insert into board_tbl(brd_num, admin_id, brd_title, brd_contents)
+		values(seq_board.nextval, #{admin_id} , #{brd_title}, #{brd_contents})			
+	</insert>
+	
+	<select id="read" resultType="com.ediosmall.domain.BoardVO">
+        <![CDATA[
+			SELECT brd_num, mbei_id, brd_title, brd_contents, brd_date_reg 
+	        FROM board_tbl 
+	        WHERE brd_num = #{brd_num}
+		]]>	
+	</select>
+	
+	<update id="modify">
+		update board_tbl set brd_title=#{brd_title}, brd_contents=#{brd_contents}, mbei_id=#{mbei_id}, brd_date_reg = sysdate
+		where brd_num = #{brd_num}	
+	</update>
+	
+	<delete id="remove">
+		delete from board_tbl where brd_num = #{brd_num}	
+	</delete>
+	
+	
+
+</mapper>

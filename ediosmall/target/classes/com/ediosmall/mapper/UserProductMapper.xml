@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.UserProductMapper">
+
+	<select id="getCategoryList" resultType="com.ediosmall.domain.CategoryVO">
+		select cat_code, cat_code_prt, cat_name
+		  from category_tbl
+		 where cat_code_prt is null 
+	</select>
+	
+	<select id="getSubCategoryList" resultType="com.ediosmall.domain.CategoryVO">
+		select cat_code, cat_code_prt, cat_name 
+		  from category_tbl 
+		 where cat_code_prt = #{cat_code}
+	</select>
+	
+	<select id="getProductListBysubCate" resultType="com.ediosmall.domain.ProductVO">
+		<![CDATA[ 
+		select 
+		       pdtei_num, cat_code, cat_code_prt, pdtei_name, 
+		       pdtei_price, pdtei_discount, pdtei_producer, pdtei_detail, 
+		       pdtei_image, pdtei_amount, pdtei_buy, pdtei_date_sub, pdtei_date_up 
+		  from 
+		      (
+		       select /*+ index_desc(productei_tbl pk_product) */ rownum rn, 
+		              pdtei_num, cat_code, cat_code_prt, pdtei_name, 
+		              pdtei_price, pdtei_discount, pdtei_producer, pdtei_detail, 
+		              pdtei_image, pdtei_amount, pdtei_buy, pdtei_date_sub, pdtei_date_up 
+		         from productei_tbl 
+		        where pdtei_num > 0 and cat_code_prt = #{cat_code_prt} and
+		
+		        	  rownum > 0 and rownum <= #{cri.pageNum} * #{cri.amount}
+		      )
+		 where rn  > (#{cri.pageNum}-1) * #{cri.amount}
+		]]>	
+	</select>
+	
+	<select id="getTotalCountProductBySubCate" resultType="int">
+		select count(*) 
+		  from productei_tbl
+		 where pdtei_num > 0 and cat_code_prt = #{cat_code}	
+	</select>
+	
+	<select id="getProductByNum" resultType="com.ediosmall.domain.ProductVO">
+		select * 
+		  from productei_tbl
+		 where pdtei_num = #{pdtei_num}
+	</select>
+
+</mapper>

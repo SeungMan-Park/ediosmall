@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.ReviewMapper">
+
+	<select id="getReviewListWithPaging" resultType="com.ediosmall.domain.ReviewVO">
+		<![CDATA[
+		select 
+		       rv_num, mbei_id, pdtei_num, 
+		       rv_contects, rv_score, brd_date_reg
+		  from 
+		  	   (
+		  	   select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+		  	   		  rv_num, mbei_id, pdtei_num, 
+		       		  rv_contects, rv_score, brd_date_reg
+		       	 from review_tbl
+		       	where pdtei_num = #{pdtei_num} and
+        	          rv_num > 0 and  
+        	          rownum > 0 and 
+        	          rownum <= #{cri.pageNum} * #{cri.amount} 
+		  	   )
+		 where rn  > (#{cri.pageNum} - 1) * #{cri.amount}
+		]]>
+	</select>
+	
+	<select id="getCountByProduct_pdtei_num" resultType="int">
+		select count(*) 
+		  from review_tbl 
+		 where pdtei_num = #{pdtei_num}
+	</select>
+	
+	<insert id="review_register">
+		insert 
+		  into review_tbl(rv_num, mbei_id, pdtei_num, rv_contects, rv_score)
+		values(sqe_review_num.nextval, #{mbei_id}, #{pdtei_num}, #{rv_contects}, #{rv_score})      
+	</insert>
+	
+	<update id="review_modify">
+		update review_tbl
+		   set rv_contects = #{rv_contects}, rv_score = #{rv_score}
+		 where rv_num = #{rv_num}  
+	</update>
+	
+	<delete id="review_delete">
+		delete
+		  from review_tbl
+		 where rv_num = #{rv_num}   
+	</delete>
+
+</mapper>
