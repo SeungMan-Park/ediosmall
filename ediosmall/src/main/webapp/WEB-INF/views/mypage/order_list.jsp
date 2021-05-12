@@ -90,7 +90,7 @@
 								<th scope="col">주문번호</th>
 								<th scope="col">주문자</th>
 								<th scope="col">받는분</th>
-								<th scope="col">금액</th>
+								<th scope="col">상품금액</th>
 								<th scope="col">처리상태</th>
 								</tr>
 							</thead>
@@ -108,7 +108,8 @@
 								
 								<td>
 									${orderVO.odr_code}
-								<!-- 	<button type="button" name="btn_order_detail" data-odr_code="${orderVO.odr_code}" class="btn btn-link">Order Detail</button>  -->
+								 	<button type="button" name="btn_order_detail" data-odr_code="${orderVO.odr_code}" class="btn btn-link">Order Detail</button>
+								 	 / <button type="button" name="btn_order_detail_close"class="btn btn-link">Order Detail Close</button>
 								</td>
 								
 								<td>${orderVO.mbei_id}</td>
@@ -200,7 +201,7 @@
 	
 				// ajax호출작업 : url? 컨트롤러 매핑주소 생성하고, PostMan 테스트
 				$.ajax({
-					url : "/admin/order/orderDetailSeen",
+					url : "/order/orderDetailSeen",
 					type : "get",
 					data :  { 
 								odr_code : odr_code  // <input type = "text" name = "odr_code" value="20"
@@ -218,6 +219,17 @@
 	
 				
 			});
+			
+			$("button[name='btn_order_detail_close']").on("click", function(){
+				// alert("버튼테스트");
+
+				//$("#orderDetailTemplete").off();
+				$(".dy_order_detail").remove();
+
+
+			});
+			
+			
 		});
 	</script>     
 	
@@ -242,18 +254,18 @@
 	<script id="orderDetailTemplete" type="text/x-handlebars-template">
 	
 		<tr class="dy_order_detail"><td colspan="8">주문상세내역</td></tr>
-		<tr class="dy_order_detail" style="background: #60c1ee;">
-			<th>선택</th><th>번호</th><th>이미지</th><th>상품명</th><th>수량</th><th>상품가격</th><th>소개</th><th colspan="2">비고</th>
+		<tr class="dy_order_detail" style="background: #657484;">
+			<th>번호</th><th>이미지</th><th>상품명</th><th>수량</th><th>상품가격</th><th>소개</th><th colspan="2">비고</th>
 		</tr>
 		{{#each .}}
-		<tr class="dy_order_detail" style="background: white;">
-			<td>선택</td>
+		<tr class="dy_order_detail" style="background: white;">			
 			<td>번호</td>
-			<td><img src="/admin/order/displayFile?fileName={{pdtei_image}}"></td>		
+			<td><img src="/order/displayFile?fileName={{pdtei_image}}"></td>
+		
 			<td>{{pdtei_name}}</td>
-			<td>{{ord_amount}}</td>
-			<td>{{ord_price}}</td>
-			<td>{{total_price ord_price ord_amount}}</td>
+			<td>{{ord_amount}}개</td>
+			<td>{{ord_price}}원</td>
+			<td>{{total_price ord_price ord_amount}}원</td>
 			<td colspan="2">비고</td>
 		</tr>
 		{{/each}}

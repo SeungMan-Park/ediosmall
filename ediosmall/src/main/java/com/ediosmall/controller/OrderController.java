@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ediosmall.domain.CartVOList;
 import com.ediosmall.domain.MbeiosVO;
+import com.ediosmall.domain.OrderDetailSeenVO;
 import com.ediosmall.domain.OrderDetailVO;
 import com.ediosmall.domain.OrderVO;
 import com.ediosmall.domain.ProductVO;
@@ -131,4 +133,25 @@ public class OrderController {
 		}
 		return "redirect:/";
 	}
+	
+	// ajax에서 넘어온 주문번호 파라미터를 가지고 주문상세테이블에 쿼리를 구성해야 한다.
+	// 조건식에 주문번호를 넣는다. odr_code를 받아서 상세정보를 알아내야 한다.
+	@GetMapping("/orderDetailSeen")
+	@ResponseBody
+	public ResponseEntity<List<OrderDetailSeenVO>> OrderDetailSeen(long odr_code) throws Exception{
+		
+		log.info("OrderDetailSeen : "+ odr_code);
+		
+		ResponseEntity<List<OrderDetailSeenVO>> entity = null;
+		
+		try {
+			entity = new ResponseEntity<List<OrderDetailSeenVO>>(orderService.OrderDetailSeen(odr_code), HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<List<OrderDetailSeenVO>>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
 }

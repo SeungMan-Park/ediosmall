@@ -49,13 +49,10 @@ public class CartController {
 //		log.info("cart_add : " + pdtei_amount);
 		
 		
-		
-		
-		
 		ResponseEntity<String> entity = null;
 		
 		// 인증체크작업
-		if(session.getAttribute("loginStatus") == null) {
+		if((MbeiosVO)session.getAttribute("loginStatus") == null) {
 			
 			log.info("로그인이 안되었습니다.");
 			

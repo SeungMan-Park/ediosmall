@@ -53,7 +53,7 @@ desired effect
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					Page Header <small>Optional description</small>
+					product_list <small>Optional description</small>
 				</h1>
 				<ol class="breadcrumb">
 					<li>
@@ -65,8 +65,7 @@ desired effect
 
 			<!-- Main content -->
 			<section class="content container-fluid">
-			
-			
+						
 			<div class="row">
 				<div class="col-lg-12">
 					<form id="searchForm" action="/admin/product/pro_list" method="get">					
@@ -93,9 +92,10 @@ desired effect
 	<div class="row">
     	<div class="col-lg-12">
     		<div class="panel panel-default">
+				<!--
     			<div class="panel-heading">
-    			 BoardList.  <button id="regBtn" type="button" class="btn btn-primary pull-right">글쓰기</button>
-    			</div>
+   			 BoardList.  <button id="regBtn" type="button" class="btn btn-primary pull-right">글쓰기</button>  
+    			</div>--> 
     			
     			<div class="panel-body">
     			 <!-- 리스트 -->
@@ -104,6 +104,7 @@ desired effect
 				    <tr>
 				      <th scope="col">번호</th>
 				      <th scope="col">상품명</th>
+					  <th scope="col">이미지</th>
 				      <th scope="col">가격</th>
 				      <th scope="col">작성일</th>
 				      <th scope="col">상품표시</th>
@@ -117,8 +118,10 @@ desired effect
 				      <th scope="row"><c:out value="${proVO.pdtei_num }"></c:out></th>
 				      <td>
 				      	<c:out value="${proVO.pdtei_name }"></c:out></a>
-				      	<img src="/admin/product/displayFile?fileName=${proVO.pdtei_image}">
 				      </td>
+					  <td>
+						<img src="/admin/product/displayFile?fileName=${proVO.pdtei_image}">
+					</td>
 				      <td><fmt:formatNumber type="currency" value="${proVO.pdtei_price }"></fmt:formatNumber></td>
 				      <td><fmt:formatDate pattern="yyyy-MM-dd" value="${proVO.pdtei_date_sub }"/></td>
 				      <td>
@@ -144,8 +147,10 @@ desired effect
     			<div class="row">
 			    	<div class="col-lg-12">
 			    		<!-- 페이징 표시 -->
-			    			<div class="panel-footer">
-								  <ul class="pagination">
+
+			    			<div class="panel-footer" style="text-align: center;">
+							<nav aria-label="Page navigation example">	
+								<ul class="pagination justify-content-center">
 								  <c:if test="${pageMaker.prev}">
 									    <li class="page-item">
 									      <a href="${pageMaker.startPage - 1 }" class="page-link" href="#" tabindex="-1" >Prev</a>
@@ -161,11 +166,16 @@ desired effect
 									      <a href="${pageMaker.endPage + 1 }" class="page-link" href="#">Next</a>
 									    </li>
 								  </c:if>    
-								  </ul>
-							
+								</ul>
+							</nav>	  
+							<!--
 			    				<hr>    				
-			    				${pageMaker }
+			    				${pageMaker }  -->
 			    			</div>
+			    			
+			    			
+			    			
+			    			
 			    	</div>
 			    </div>
 	

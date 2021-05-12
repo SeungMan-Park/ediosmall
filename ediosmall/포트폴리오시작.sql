@@ -337,4 +337,22 @@ commit
 ;
 
 
+create or replace TRIGGER trg_order 
+   AFTER INSERT 
+   ON order_detail_table
+   FOR EACH ROW 
+DECLARE
+   v_ord_amount NUMBER;   
+   v_pdtei_num NUMBER;
+BEGIN
+   -- 사용자가 입력한 구매 수량을 v_ord_amount에 저장
+   SELECT :NEW.ord_amount INTO v_ord_amount FROM DUAL;
+   -- 사용자가 구매한 물품명을 v_prodName에 저장
+   SELECT :NEW.pdtei_num INTO v_pdtei_num FROM DUAL;
+   -- 주문 수량만큼 수량 감소
+   UPDATE productei_tbl SET pdtei_amount = pdtei_amount - v_ord_amount 
+       WHERE pdtei_num = v_pdtei_num;
+END;
+
+
 

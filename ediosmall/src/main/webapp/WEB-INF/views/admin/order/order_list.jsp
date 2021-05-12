@@ -52,7 +52,7 @@ desired effect
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					Page Header <small>Optional description</small>
+					order_list <small>Optional description</small>
 				</h1>
 				<ol class="breadcrumb">
 					<li>
@@ -92,9 +92,10 @@ desired effect
 	<div class="row">
     	<div class="col-lg-12">
     		<div class="panel panel-default">
+    			<!--
     			<div class="panel-heading">
     			 BoardList.  <button id="regBtn" type="button" class="btn btn-primary pull-right">글쓰기</button>
-    			</div>
+    			</div>-->
     			
     			<div class="panel-body">
     			 <!-- 리스트 -->
@@ -125,7 +126,7 @@ desired effect
 				      
 				      <td>
 				      	${orderVO.odr_code}
-				      	<button type="button" name="btn_order_detail" data-odr_code="${orderVO.odr_code}" class="btn btn-link">Order Detail</button>
+				      	<button type="button" name="btn_order_detail" data-odr_code="${orderVO.odr_code}" class="btn btn-link">Order Detail</button> / <button type="button" name="btn_order_detail_close"class="btn btn-link">Order Detail Close</button> 
 				      </td>
 				      
 				      <td>${orderVO.mbei_id}</td>
@@ -149,7 +150,7 @@ desired effect
     			<div class="row">
 			    	<div class="col-lg-12">
 			    		<!-- 페이징 표시 -->
-			    			<div class="panel-footer">
+			    			<div class="panel-footer"  style="text-align: center;">
 								  <ul class="pagination">
 								  <c:if test="${pageMaker.prev}">
 									    <li class="page-item">
@@ -168,8 +169,9 @@ desired effect
 								  </c:if>    
 								  </ul>
 							
+							<!--
 			    				<hr>    				
-			    				${pageMaker }
+			    				${pageMaker }  -->
 			    			</div>
 			    	</div>
 			    </div>
@@ -325,6 +327,18 @@ desired effect
 
 			
 		});
+
+		$("button[name='btn_order_detail_close']").on("click", function(){
+			// alert("버튼테스트");
+
+			//$("#orderDetailTemplete").off();
+			$(".dy_order_detail").remove();
+
+
+		});
+
+
+
 	});
 </script>     
 
@@ -356,11 +370,12 @@ desired effect
 	<tr class="dy_order_detail" style="background: white;">
 		<td>선택</td>
 		<td>번호</td>
-		<td><img src="/admin/order/displayFile?fileName={{pdtei_image}}"></td>		
+		<td><img src="/admin/order/displayFile?fileName={{pdtei_image}}"></td>	
+			
 		<td>{{pdtei_name}}</td>
-		<td>{{ord_amount}}</td>
-		<td>{{ord_price}}</td>
-		<td>{{total_price ord_price ord_amount}}</td>
+		<td>{{ord_amount}}개</td>
+		<td>{{ord_price}}원</td>
+		<td>{{total_price ord_price ord_amount}}원</td>
 		<td colspan="2">비고</td>
 	</tr>
 	{{/each}}

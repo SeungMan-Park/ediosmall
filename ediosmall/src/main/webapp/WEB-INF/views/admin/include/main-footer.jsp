@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <footer class="main-footer">
 <!-- To the right -->
-<div class="pull-right hidden-xs">Anything you want</div>
+<div class="pull-right hidden-xs"></div>
 <!-- Default to the left -->
-<strong>Copyright &copy; 2016 <a href="#">Company</a>.
-</strong> All rights reserved.
+<strong>Copyright &copy; 2021 <a href="https://blog.naver.com/paradigm2">Seumg_Man Park</a>.&nbsp;&nbsp;all right reserved.
+</strong> 
 </footer>

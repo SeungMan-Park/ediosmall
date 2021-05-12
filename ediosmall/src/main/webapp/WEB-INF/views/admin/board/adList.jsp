@@ -51,7 +51,7 @@ desired effect
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					Page Header <small>Optional description</small>
+					board list <small>Optional description</small>
 				</h1>
 				<ol class="breadcrumb">
 					<li>
@@ -64,22 +64,27 @@ desired effect
 			<!-- Main content -->
 			<section class="content container-fluid">
 	
-	
-			
-
-<!-- 주문통계리스트 -->
-	<div class="row">
-	  	<div class="col-lg-12">
-	  		
-	  		
-	  		<div class="starter-template">
+			<div class="row">
+		    	<div class="col-lg-12">
+		    		<form id="searchForm" action="/admin/board/adList" method="get">
+		    			<select name="type" id="type">
+		    				<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected':'' }" />>--</option>
+		    				<option value="T" <c:out value="${pageMaker.cri.type == 'T' ? 'selected':'' }" />>제목</option>
+		    				<option value="C" <c:out value="${pageMaker.cri.type == 'C' ? 'selected':'' }" />>내용</option>
+		    				<option value="W" <c:out value="${pageMaker.cri.type == 'W' ? 'selected':'' }" />>작성자</option>
+		    				<option value="TC" <c:out value="${pageMaker.cri.type == 'TC' ? 'selected':'' }" />>제목 or 내용</option>
+		    				<option value="TW" <c:out value="${pageMaker.cri.type == 'TW' ? 'selected':'' }" />>제목 or 작성자</option>
+		    				<option value="TCW" <c:out value="${pageMaker.cri.type == 'TCW' ? 'selected':'' }" />>제목 or 내용 or 작성자</option>
+		    			</select>
+		    			<input type="text" name="keyword" value="${pageMaker.cri.keyword }">
+		    			<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">
+		    			<input type="hidden" name="amount" value="${pageMaker.cri.amount }">
+		    			<button id="btnSearch" class="btn btn-primary" type="button">Search</button>
+		    		</form>
+		    	</div>
+		    </div>
     
-    <div class="row">
-    	<div class="col-lg-12">
-    		<h1 class="page-header">Tables List</h1>
-    	</div>
-    </div>
-        
+			<!-- 게시물 리스트 -->        
     <div class="row">
     	<div class="col-lg-12">
     		<div class="panel panel-default">
@@ -110,34 +115,15 @@ desired effect
 				   </tbody>
 				</table>
     			</div>
-    		</div>
-    	</div>
-    </div>
-    
-    <!-- 검색 / 페이징 -->
-    <div class="row">
-    	<div class="col-lg-12">
-    		<form id="searchForm" action="/mypage/board/list" method="get">
-    			<select name="type" id="type">
-    				<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected':'' }" />>--</option>
-    				<option value="T" <c:out value="${pageMaker.cri.type == 'T' ? 'selected':'' }" />>제목</option>
-    				<option value="C" <c:out value="${pageMaker.cri.type == 'C' ? 'selected':'' }" />>내용</option>
-    				<option value="W" <c:out value="${pageMaker.cri.type == 'W' ? 'selected':'' }" />>작성자</option>
-    				<option value="TC" <c:out value="${pageMaker.cri.type == 'TC' ? 'selected':'' }" />>제목 or 내용</option>
-    				<option value="TW" <c:out value="${pageMaker.cri.type == 'TW' ? 'selected':'' }" />>제목 or 작성자</option>
-    				<option value="TCW" <c:out value="${pageMaker.cri.type == 'TCW' ? 'selected':'' }" />>제목 or 내용 or 작성자</option>
-    			</select>
-    			<input type="text" name="keyword" value="${pageMaker.cri.keyword }">
-    			<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">
-    			<input type="hidden" name="amount" value="${pageMaker.cri.amount }">
-    			<button id="btnSearch" class="btn btn-primary" type="button">Search</button>
-    		</form>
-    	</div>
-    </div>
+    		
+    	
+
+   
+  
     <div class="row">
     	<div class="col-lg-12">
     	<!-- 페이징 표시 -->
-    			<div class="panel-footer">
+    			<div class="panel-footer" style="text-align: center;">
     			   <ul class="pagination">
     			   <c:if test="${pageMaker.prev }">
 					    <li class="page-item">
@@ -156,8 +142,9 @@ desired effect
 				    </c:if>
 				  </ul>
 		
-		    				<hr>
-		    				${pageMaker }
+							<!--
+			    				<hr>    				
+			    				${pageMaker }  -->
     			</div>
     	</div>
     </div>
@@ -168,17 +155,16 @@ desired effect
 		<input type="hidden" name="type" value='<c:out value="${pageMaker.cri.type }" />'>
 		<input type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword }" />'>
 	</form>
+
+
+
+				</div>
+		 	</div>
+		</div>
+
     
-     
-  </div>	
-	  		
-	  		
-	  		
-	  		
-	  	</div>
-	  </div>
-    
- 
+ 			</section>
+			<!-- /.content -->
  
 <script>
 
@@ -261,8 +247,7 @@ desired effect
     
     
 
-			</section>
-			<!-- /.content -->
+
 		</div>
 		<!-- /.content-wrapper -->
 

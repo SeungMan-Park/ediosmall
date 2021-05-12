@@ -51,7 +51,7 @@ desired effect
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					Page Header <small>Optional description</small>
+					hit_product <small>Optional description</small>
 				</h1>
 				<ol class="breadcrumb">
 					<li>
@@ -63,7 +63,7 @@ desired effect
 
 			<!-- Main content -->
 			<section class="content container-fluid">
-	
+	<!-- 
 	<div class="row">
 		<div class="col-lg-12">
 			<form id="formDate" action="/admin/order/order_sale" method="get">
@@ -93,15 +93,17 @@ desired effect
 			</form>
 		</div>
 	</div>
-			
+	 -->		
 
 <!-- 주문통계리스트 -->
 	<div class="row">
 	  	<div class="col-lg-12">
 	  		<div class="panel panel-default">
+	  		<!--
 	  			<div class="panel-heading text-right">
 	  			 <button id="regBtn" type="button" class="btn btn-primary pull-right">글쓰기</button>
 	  			</div>
+	  		-->	
 	  			
 	  			<div class="panel-body">
 	  			 <!-- 리스트 -->

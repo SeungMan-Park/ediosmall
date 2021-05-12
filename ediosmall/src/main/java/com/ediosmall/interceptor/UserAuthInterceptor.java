@@ -32,7 +32,10 @@ public class UserAuthInterceptor extends HandlerInterceptorAdapter {
 			
 			if(isAjaxRequest(request)) {
 				response.sendError(-1);
-				System.out.println("AjaxRequest요청");
+				System.out.println("AjaxRequest요청");				
+//				response.sendRedirect("/member/login");
+//				System.out.println("/member/login 주소이동 확인?");
+//				return false;
 			}else {
 				response.sendRedirect("/member/login");  // /member/login -> /member/loginPost(인터셉터 설정)
 				return false;  // Controller로 제어가 넘어가지 아니함
@@ -47,14 +50,56 @@ public class UserAuthInterceptor extends HandlerInterceptorAdapter {
 
 	// ajax 요청 체크
 	private boolean isAjaxRequest(HttpServletRequest req) {
+		
+		System.out.println("isAjaxRequest 메서드 확인");
+		
 		String header = req.getHeader("AJAX");
 		
-		if("true".equals(header)) {
+		
+		if("false".equals(header)) {
+			System.out.println("isAjaxRequest 메서드 확인2");
 			return true;
 		}else {
+			System.out.println("isAjaxRequest 메서드 확인3");
+			//response.sendRedirect("/member/login");
+			
 			return false;
 		}		
 	}
+	
+	// ajax 요청 체크
+//	private boolean isAjaxRequest(HttpServletRequest req) {
+//		
+//		System.out.println("isAjaxRequest 메서드 확인");
+//		
+//		String header = req.getHeader("AJAX");
+//		
+//		if("false".equals(header)) {
+//			System.out.println("isAjaxRequest 메서드 확인2");
+//			return false;
+//		}else {
+//			System.out.println("isAjaxRequest 메서드 확인3");
+//			return true;
+//		} 
+//	}
+	
+	
+	
+	// ajax 요청 체크
+//	private boolean isAjaxRequest(HttpServletRequest req) {
+//		
+//		System.out.println("isAjaxRequest 메서드 확인");
+//		
+//		String header = req.getHeader("X-Requested-With");
+//		
+//		if("XMLHttpRequest".equals(header)) {
+//			System.out.println("isAjaxRequest 메서드 확인2");
+//			return true;
+//		}else {
+//			System.out.println("isAjaxRequest 메서드 확인3");
+//			return false;
+//		}		
+//	}
 
 	// 세션이 소멸된 상태이거나 비로그인시 요청한 주소를 저장
 	// 사용자가 로그인이 진행이되면, 요청한 주소가 있으면 그곳으로 이동. 없으면 루트로 이동.

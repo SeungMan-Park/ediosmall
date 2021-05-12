@@ -191,14 +191,21 @@
 							 -->
 							 --%>
 							
-							<h3>배송정보</h3>
+							<br>
+							<br>
+							<h5>* 배송정보</h5>
+							<br>
 							
+							 <!-- 
 							<div class="form-check">
 							  <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+							 
 							  <label class="form-check-label" for="defaultCheck1">
 							    주문고객 정보와 동일
 							  </label>
+							   
 							</div>
+							-->
 							
 							<form id="orderForm" action="/order/order_buy" method="post">
 							<div class="form-group">
