@@ -19,7 +19,9 @@
 				<!-- search form (Optional) -->
 				<form action="/admin/product/pro_list" method="get" class="sidebar-form">
 					<div class="input-group">
-						<input type="text" name="q" class="form-control" placeholder="Search...">
+						<!-- <input type="text" name="q" class="form-control" placeholder="Search...">  -->
+						<input type="hidden" name="type" value="N"   <c:out value="${pageMaker.cri.type == 'N'   ? 'selected' : '' }" />>
+            			<input class="form-control mr-sm-2" type="text" placeholder="Search..." aria-label="Search" name="keyword" value="${pageMaker.cri.keyword }">
 						<span class="input-group-btn">
 							<button type="submit" name="search" id="search-btn" class="btn btn-flat">
 								<i class="fa fa-search"></i>

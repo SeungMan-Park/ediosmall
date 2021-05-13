@@ -81,7 +81,8 @@
 				 <div class="card mb-2 shadow-sm">
 			</c:if>
 				      <div class="card-body">
-				        <a href="/product/product_read?pdtei_num=${productVO.pdtei_num}">
+				    <!--    <a href="/product/product_read?pdtei_num=${productVO.pdtei_num}">  --> 
+				    	<a href="/product/product_read?pdtei_num=${productVO.pdtei_num}">
 				        	<img src="/product/displayFile?fileName=${productVO.pdtei_image}" />
 				        </a>
 				        <br>
@@ -90,7 +91,9 @@
 				        <span><fmt:formatNumber type="currency" value="${productVO.pdtei_price }"></fmt:formatNumber></span><br>
 				        <input type="number" style="width: 50px" name="ord_amount" value="1"> 개<br><br>
 				        <button type="button" name="btn_direct_buy" class="btn btn-link">즉시구매</button>
+				        
 				        <button type="button" name="btn_cart_add" class="btn btn-link">장바구니</button>
+
 				      </div>
 			<c:if test="${i%j == j-1 }">
 				 </div>
@@ -129,6 +132,7 @@
     <li><a href="2차카테고리 참조하는 상품목록?cat_code={{cat_code}}">{{cat_name}}</a></li>
   {{/each}}
 </script>
+
 
 <script>
   $(document).ready(function(){
@@ -191,7 +195,6 @@
         console.log("상품코드 : " + pdtei_num);
         console.log("구매수량 : " + pdtei_amount);
 
-        //return;
 
         $.ajax({
           url : "/cart/add",
@@ -199,16 +202,51 @@
           data : {pdtei_num : pdtei_num, pdtei_amount : pdtei_amount},
           dataType : "text",
           success : function(data){
-            if(data == "SUCCESS"){
+
+            if(data == "LoginRequired"){
+
+              console.log("인식은 되니?");
+
+
+              alert("로그인을 요청 합니다.");
+        	    location.href = "/member/login"
+
+
+            }else if(data == "SUCCESS"){
+            	
+            	console.log("인식은 되니? 2");
+
               if(confirm("장바구니 추가되었습니다. \n 확인 하시겠습니까?")){
                 location.href = "/cart/cart_list";
               }
-            }else if(data == "LoginRequired"){
-        	  alert("로그인을 요청 합니다.");
-        	  location.href = "/member/login"
-          	}            
+
+
+          	} 
+
+
           }
         });
+
+
+        // $.ajax({
+        //   url : "/cart/add",
+        //   type : "post",
+        //   data : {pdtei_num : pdtei_num, pdtei_amount : pdtei_amount},
+        //   dataType : "text",
+        //   success : function(data){
+        //     if(data == "SUCCESS"){
+        //       if(confirm("장바구니 추가되었습니다. \n 확인 하시겠습니까?")){
+        //         location.href = "/cart/cart_list";
+        //       }
+        //     }else if(data == "LoginRequired"){
+        // 	  alert("로그인을 요청 합니다.");
+        // 	  location.href = "/member/login"
+        //   	}            
+        //   }
+        // });
+
+
+
 
       });
     

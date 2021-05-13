@@ -192,7 +192,7 @@
           판매가 : <strong class="d-inline-block mb-2 text-primary">${productVO.pdtei_price}</strong>
           할인율 : <strong class="d-inline-block mb-2 text-primary">${productVO.pdtei_discount}</strong>
           제조사 : <strong class="d-inline-block mb-2 text-primary">${productVO.pdtei_producer}</strong>
-          수량 :  <input type="text" value="${productVO.pdtei_amount}" id="pdtei_amount" name="pdtei_amount" >
+          수량 :  <input type="text" value="1" id="pdtei_amount" name="pdtei_amount" >
           
           	  <button type="button" id="btnOrder" name="btn_direct_buy" class="btn btn-link">즉시구매</button>
 	    	  <button type="button" id="btnCart" class="btn btn-link">장바구니</button>

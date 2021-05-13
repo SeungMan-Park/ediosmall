@@ -48,4 +48,16 @@ public class UserProductServiceImpl implements UserProductService {
 		return userProductMapper.getProductByNum(pdtei_num);
 	}
 
+	@Override
+	public List<ProductVO> getProduct_list(Criteria cri) throws Exception {
+		// TODO Auto-generated method stub
+		return userProductMapper.getProduct_list(cri);
+	}
+
+	@Override
+	public int getTotalCountProductSearch(Criteria cri) throws Exception {
+		// TODO Auto-generated method stub
+		return userProductMapper.getTotalCountProductSearch(cri);
+	}
+
 }

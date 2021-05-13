@@ -21,4 +21,10 @@ public interface UserProductService {
 	
 	// 상품상세설명
 	public ProductVO getProductByNum(Long pdtei_num) throws Exception;	
+	
+	// 상품리스트(검색)
+	public List<ProductVO> getProduct_list(Criteria cri) throws Exception;
+	
+	// 상품개수(페이징기능에 사용/검색)
+	public int getTotalCountProductSearch(Criteria cri) throws Exception;
 }

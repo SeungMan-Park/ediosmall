@@ -1,5 +1,7 @@
 package com.ediosmall.interceptor;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -56,13 +58,12 @@ public class UserAuthInterceptor extends HandlerInterceptorAdapter {
 		String header = req.getHeader("AJAX");
 		
 		
-		if("false".equals(header)) {
+		if("true".equals(header)) {
 			System.out.println("isAjaxRequest 메서드 확인2");
 			return true;
 		}else {
 			System.out.println("isAjaxRequest 메서드 확인3");
 			//response.sendRedirect("/member/login");
-			
 			return false;
 		}		
 	}

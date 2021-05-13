@@ -43,7 +43,8 @@ $(document).ajaxError(function(event, request, settings, thrownError){
         alert("세션이 종료 되었습니다. 다시 로그인 요청합니다.");
         location.href = '/member/login'; // contextPath
     }else{
-        alert('다음 위치에서 에러가 발생하였습니다. 관리자에게 문의바랍니다.\n' + settings.url);
+        alert('다음 위치에서 에러가 발생하였습니다. 관리자에게 문의바랍니다.\n' + settings.url + '\n다만, 로그인을 해야 합니다.');
+        location.href = '/member/login';
     }
 });
 

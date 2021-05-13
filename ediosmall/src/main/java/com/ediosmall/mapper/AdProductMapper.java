@@ -17,7 +17,7 @@ public interface AdProductMapper {
 	// 상품등록
 	public void product_insert(ProductVO vo) throws Exception;
 	
-	// 상품리스트
+	// 상품리스트 / 사용자 상품리스트 겸용
 	public List<ProductVO> product_list(Criteria cri) throws Exception;
 	
 	// 상품개수(페이징기능에 사용)

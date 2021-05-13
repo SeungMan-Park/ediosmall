@@ -67,7 +67,9 @@
 			<%-- Main content  로그인 UI --%>
 			<section class="content container-fluid">
 				<div class="container" style="width: 450px; height:620px; background-color: white; margin-top:30px;">
-					<form id="loginForm" class="form-signin" action="/member/loginPost" method="post" style="padding:50px 30px;">
+				 	<form id="loginForm" class="form-signin" action="/member/loginPost" method="post" style="padding:50px 30px;"> 
+					
+				<!--	<form id="loginForm" class="form-signin" action="#" method="" style="padding:50px 30px;">  -->
 						<h4 class="form-signin-heading" style="text-align: center;">Log In</h4>
 						<br><br>
 						<label for="inputId" class="sr-only">Id</label> 

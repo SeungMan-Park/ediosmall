@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ediosmall.domain.CategoryVO;
 import com.ediosmall.domain.ProductVO;
 import com.ediosmall.dto.Criteria;
+import com.ediosmall.dto.PageDTD;
 import com.ediosmall.service.UserProductService;
 import com.ediosmall.util.FileUtils;
 
@@ -35,6 +36,9 @@ public class UserProductController {
 	
 	@Setter(onMethod_ = @Autowired)
 	private UserProductService userProductService;
+	
+//	@Setter(onMethod_ = @Autowired)
+//	private AdProductService service;	
 	
 	@ResponseBody
 	@GetMapping("/subCategoryList/{cat_code}")
@@ -85,6 +89,7 @@ public class UserProductController {
 		
 		log.info("product_read : " + pdtei_num);
 		
+	
 		ProductVO vo = userProductService.getProductByNum(pdtei_num);
 		
 		vo.setPdtei_image(FileUtils.thumbToOriginName(vo.getPdtei_image()));
@@ -92,6 +97,24 @@ public class UserProductController {
 		// 기본이미지를 설정작업
 		
 		model.addAttribute("productVO", vo);
+		
+	}
+	
+	// 상품검색 시도
+	@GetMapping("/pro_list")
+	public String pro_list(@ModelAttribute("cri") Criteria cri, Model model) throws Exception {
+		log.info("pro_list " + cri);
+
+		// 1) 게시물 데이터
+		model.addAttribute("pro_list", userProductService.getProduct_list(cri));
+		
+		int totalCount = userProductService.getTotalCountProductSearch(cri);
+		
+		
+		// 2) 페이징 정보.  [이전] 1 2 3 4 5 6 ... [다음]
+		model.addAttribute("pageMaker", new PageDTD(cri, totalCount));
+		
+		return "/product/pro_list";
 		
 	}
 

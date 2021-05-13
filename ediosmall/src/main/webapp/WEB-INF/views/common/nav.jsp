@@ -24,8 +24,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/member/join">Register</a>
-
-      
+      </li>  
       </c:if>
       <!-- 인증 후 표시 -->
       <c:if test="${sessionScope.loginStatus != null }">
@@ -62,9 +61,10 @@
   </div>
   <!--  -->
   <div class="search-wrap">
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        <form class="form-inline my-2 my-lg-0" id="searchForm" action="/product/pro_list" method="get">
+			<input type="hidden" name="type" value="N" <c:out value="${pageMaker.cri.type == 'N'   ? 'selected' : '' }" />>
+            <input class="form-control mr-sm-2" type="text" placeholder="ex) 티셔츠" aria-label="Search" name="keyword" value="${pageMaker.cri.keyword }">
+            <button class="btn btn-secondary my-2 my-sm-0" type="button" id="btnSearch">Search</button>
         </form> 
   </div>  
 </nav>
@@ -123,6 +123,23 @@ $("#btn_pw_search").on("click", function(){
 
 });
  
+</script>
+
+<script>
+	$(document).ready(function() {
+		
+		var searchForm = $("#searchForm");
+		
+		$("#searchForm #btnSearch").on("click", function(e){
+
+			searchForm.find("input[name='pageNum']").val("1");
+
+			searchForm.submit();
+		});
+		
+		
+		
+	});
 </script>
 
 
