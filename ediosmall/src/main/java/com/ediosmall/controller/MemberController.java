@@ -77,7 +77,7 @@ public class MemberController {
 				result = "loginSuccess";					
 			}else {
 				result = "loginPWFail";
-				return;
+				return ;
 			}
 		}
 			

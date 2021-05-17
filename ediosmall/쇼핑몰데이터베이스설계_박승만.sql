@@ -1567,3 +1567,39 @@ select
 
 */
   
+  
+  
+/*
+
+select
+				mbei_id, mbei_name, mbei_password, mbei_email, mbei_zipcode,
+				mbei_addr1st, mbei_addr2nd, mbei_phonenum, mbei_nickname_u,
+				mbei_approval, mbei_earnpoints, mbei_date_sub, mbei_date_up,
+				mbei_date_lastlogin
+		  from
+		  		(
+	  			select
+	  					/*+ index_desc(mbeios_tbl pk_member) */ rownum rn, 
+						mbei_id, mbei_name, mbei_password, mbei_email, mbei_zipcode,
+						mbei_addr1st, mbei_addr2nd, mbei_phonenum, mbei_nickname_u,
+						mbei_approval, mbei_earnpoints, mbei_date_sub, mbei_date_up,
+						mbei_date_lastlogin
+				from 	mbeios_tbl
+					
+				where   mbei_id is not null and
+	
+		        	  rownum > 0 and rownum <= 5
+		  		)
+		  		
+		 where  rn  > 0
+         
+         
+         
+		select count(*)
+		  from mbeios_tbl
+		 where 
+		  
+
+		  	   mbei_id is not null         
+
+*/  

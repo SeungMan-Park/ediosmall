@@ -1,13 +1,16 @@
 package com.ediosmall.controller;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +20,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ediosmall.domain.AdminVO;
 import com.ediosmall.domain.MbeiosVO;
+import com.ediosmall.dto.Criteria;
+import com.ediosmall.dto.LoginDTO;
+import com.ediosmall.dto.PageDTD;
 import com.ediosmall.service.AdminService;
 
 import lombok.Setter;
@@ -26,6 +32,9 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @RequestMapping("/admin/*")
 public class AdminController {
+	
+	@Inject	
+	private BCryptPasswordEncoder cryPassEnc;
 	
 	@Setter(onMethod_ = @Autowired)
 	private AdminService adminService;
@@ -176,6 +185,104 @@ public class AdminController {
 		
 		return "redirect:/admin/modify";
 	}
+	
+	// 관리자 회원관리_리스트
+	@GetMapping("/member/user_list")
+	public String user_list(@ModelAttribute("cri") Criteria cri, Model model) throws Exception {
+		
+		log.info("user_list ... " + cri);
+		
+		// 1) 회원 데이터		
+		model.addAttribute("user_list", adminService.user_list(cri));
+		
+		int totalCount = adminService.getTotalCountUser_list(cri);
+
+		// 2) 페이징 정보.  [이전] 1 2 3 4 5 6 ... [다음]
+		model.addAttribute("pageMaker", new PageDTD(cri, totalCount));
+		
+		return "/admin/member/user_list";
+	}
+	
+	// 관리자 회원관리_수정폼
+	@GetMapping("/member/user_modify")
+	public String user_modify(@RequestParam("mbei_id") String mbei_id, @ModelAttribute("cri") Criteria cri, Model model) throws Exception{
+		
+		log.info("modify" + mbei_id);
+		
+		MbeiosVO vo = adminService.user_modify(mbei_id);
+		
+		model.addAttribute("vo", vo);
+		
+		return "/admin/member/user_modify";
+		
+	}
+	
+	// 관리자 회원관리_수정폼
+	@PostMapping("/member/user_modify")
+	public String user_modifyPost2(LoginDTO dto, MbeiosVO vo, RedirectAttributes rttr) throws Exception {
+		
+		adminService.user_modifyPost2(vo);
+		
+		return "redirect:/admin/member/user_list";
+	}
+	
+	// 관리자_사용자 비밀번호 변경
+	@GetMapping("/member/user_modify_pw")
+	public String user_modify_pw(@RequestParam("mbei_id") String mbei_id, @ModelAttribute("cri") Criteria cri, Model model) throws Exception {
+		
+		log.info("modify : " + mbei_id);
+		
+		log.info("비밀번호 변경");
+		
+		MbeiosVO vo = adminService.user_modify(mbei_id);
+		
+		model.addAttribute("vo", vo);
+		
+		return "/admin/member/user_modify_pw";
+		
+	}
+	
+	// 관리자_사용자 비밀번호 변경(저장)
+	@PostMapping("/member/user_modify_pw")
+	public String user_modify_pw(MbeiosVO vo) throws Exception{
+		
+		vo.setMbei_password(cryPassEnc.encode(vo.getMbei_password()));
+		
+		adminService.user_modify_pw(vo);
+		log.info("=====mbei_password : " + vo);
+		log.info("=====mbei_password(vo) : " + vo.toString());
+		
+		return "redirect:/admin/member/user_list";
+	}
+	
+	// 관리자_사용자 계정 삭제 정보 불러오기
+	@GetMapping("/member/regDelete")
+	public String regDelete(@RequestParam("mbei_id") String mbei_id, @ModelAttribute("cri") Criteria cri, Model model) throws Exception {
+
+		log.info("modify" + mbei_id);
+		
+		MbeiosVO vo = adminService.user_modify(mbei_id);
+		
+		model.addAttribute("vo", vo);
+		
+		return "/admin/member/regDelete";		
+		
+	}
+	
+	// 관리자_사용자 계정 삭제 정보 삭제처리
+	@GetMapping("/member/user_delete")
+	public String user_delete(MbeiosVO vo, @ModelAttribute("cri") Criteria cri, Model model) throws Exception {
+		
+		
+		log.info("비밀번호 변경");
+		
+		String mbei_id = vo.getMbei_id();
+		adminService.user_delete(mbei_id);
+		
+		
+		return "redirect:/admin/member/user_list";
+		
+	}	
 	
 	
 

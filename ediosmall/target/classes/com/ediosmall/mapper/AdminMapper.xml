@@ -2,6 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ediosmall.mapper.AdminMapper">
 
+	<sql id="criteria">
+		<trim prefix="(" suffix=")  and" prefixOverrides="OR" > 
+	       <foreach item="type" collection="typeArr">
+	         <trim prefix="OR">	
+		       	<choose>
+		       		<when test="type == 'N'.toString()">
+		       			mbei_id like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'D'.toString()">
+		       			mbei_name like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'C'.toString()">
+		       			mbei_nickname_u like '%' || #{keyword} || '%'
+		       		</when>
+		       	</choose>
+	         </trim>
+	       </foreach> 
+	    </trim>	
+	</sql>
+
 	<select id="login_check" resultType="com.ediosmall.domain.AdminVO">
 		select admin_id, admin_pw, admin_name, admin_date_late
 		  from admin_tbl
@@ -36,5 +56,78 @@
 		    set admin_date_late = sysdate
 		where admin_id = #{admin_id}
 	</update>
+	
+	<select id="user_list" resultType="com.ediosmall.domain.MbeiosVO">
+		<![CDATA[
+		select
+				mbei_id, mbei_name, mbei_password, mbei_email, mbei_zipcode,
+				mbei_addr1st, mbei_addr2nd, mbei_phonenum, mbei_nickname_u,
+				mbei_approval, mbei_earnpoints, mbei_date_sub, mbei_date_up,
+				mbei_date_lastlogin
+		  from
+		  		(
+	  			select
+	  					/*+ index_desc(mbeios_tbl pk_member) */ rownum rn, 
+						mbei_id, mbei_name, mbei_password, mbei_email, mbei_zipcode,
+						mbei_addr1st, mbei_addr2nd, mbei_phonenum, mbei_nickname_u,
+						mbei_approval, mbei_earnpoints, mbei_date_sub, mbei_date_up,
+						mbei_date_lastlogin
+				from 	mbeios_tbl
+					
+		]]>		where   mbei_id is not null and
+		
+		 		<include refid="criteria"></include> 
+		 		
+		 <![CDATA[        
+		        	  rownum > 0 and rownum <= #{pageNum} * #{amount}
+		  		)
+		  		
+		 where  rn  > (#{pageNum}-1) * #{amount}
+		]]>		 		
+		 				
+	</select>
+	
+	<select id="getTotalCountUser_list" resultType="int">
+		select count(*)
+		  from mbeios_tbl
+		 where 
+		  <include refid="criteria"></include> 
+		  
+		  <![CDATA[
+		  	   mbei_id is not null
+		  ]]>
+	</select>
+	
+	<select id="user_modify" resultType="com.ediosmall.domain.MbeiosVO">
+		select *
+		  from mbeios_tbl
+		 where mbei_id = #{mbei_id}
+	</select>
+	
+	<update id="user_modifyPost2">
+		update mbeios_tbl
+		
+		    set MBEI_EMAIL = #{mbei_email}
+		    ,   MBEI_ZIPCODE = #{mbei_zipcode}
+		    ,   MBEI_ADDR1ST = #{mbei_addr1st}
+		    ,   MBEI_ADDR2ND = #{mbei_addr2nd}
+		    ,   MBEI_PHONENUM = #{mbei_phonenum}
+		    ,   MBEI_NICKNAME_U = #{mbei_nickname_u}
+		    ,   MBEI_APPROVAL = #{mbei_approval}
+		    ,   MBEI_DATE_UP = sysdate
+		    
+		where MBEI_ID = #{mbei_id}		
+	</update>
+	
+	<update id="user_modify_pw">
+		update mbeios_tbl
+		set mbei_password = #{mbei_password}
+		where mbei_id = #{mbei_id}	
+	</update>
+	
+	<delete id="user_delete">
+		delete from mbeios_tbl
+		where MBEI_ID=#{mbei_id}		
+	</delete>
 
 </mapper>
