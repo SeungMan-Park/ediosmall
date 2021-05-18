@@ -33,6 +33,8 @@
 		alert('회원정보를 수정하였습니다.');
 	}else if(message == 'modifyFail'){
 		alert('비밀번호를 확인바랍니다.');
+	}else if(message == 'loginIDNullFail'){
+		alert('아이디가 존재하지 아니합니다.');
 	}
 	
 

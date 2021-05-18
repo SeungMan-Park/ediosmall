@@ -248,7 +248,7 @@ $(document).ready(function(){
 	/* 취소 버튼 클릭 시 */ 
 	$("#btn_cancle").on("click", function(){
 
-		location.href="/admin/member/regDelete"; 
+		location.href="/admin/member/user_list"; 
 	});
 
 });

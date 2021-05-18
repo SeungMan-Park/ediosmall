@@ -6,4 +6,14 @@ $(document).ready(function(){
 
         form.submit();
     });
+    
+    $("#btn_List").on("click", function(){
+
+        location.href="/admin/product/pro_list"; 
+        
+        //form.attr("action","/admin/product/pro_list");
+		//form.submit();
+    }); 
+ 
+    
 });

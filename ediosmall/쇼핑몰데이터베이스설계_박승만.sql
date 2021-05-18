@@ -1603,3 +1603,35 @@ select
 		  	   mbei_id is not null         
 
 */  
+
+/*
+		select 
+		       max(p.pdtei_name) as name, 
+		       max(o.pdtei_num) as code, 
+		       sum(o.ord_amount) as amount
+		  from order_detail_table o inner join productei_tbl p
+		    on o.pdtei_num = p.pdtei_num
+		 group by o.pdtei_num
+         order by amount DESC
+         
+		select 
+		       max(p.pdtei_name) as name, 
+		       max(o.pdtei_num) as code, 
+		       sum(o.ord_amount) as amount,
+               max(p.pdtei_amount) as p_amount
+		  from order_detail_table o inner join productei_tbl p
+		    on o.pdtei_num = p.pdtei_num
+		 group by o.pdtei_num
+         order by amount DESC   
+         
+         
+		select 
+		       max(p.pdtei_name) as name, 
+		       max(o.pdtei_num) as pdtei_num, 
+		       sum(o.ord_amount) as amount,
+               max(p.pdtei_amount) as amount2
+		  from order_detail_table o inner join productei_tbl p
+		    on o.pdtei_num = p.pdtei_num
+		 group by o.pdtei_num
+         order by amount DESC          
+*/

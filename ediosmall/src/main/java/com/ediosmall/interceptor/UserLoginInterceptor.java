@@ -25,6 +25,15 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		
+//		HttpSession session =  request.getSession();
+//		MbeiosVO mbeiosVO = (MbeiosVO) session.getAttribute("mbeiosVO");
+//		
+//		if(mbeiosVO == null) {
+//			response.sendRedirect("/member/login");
+//			return false;
+//		}
+
 
 		return true;
 	}
@@ -47,6 +56,11 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
 		// 로그인시 Model정보를 참조하는 작업
 		ModelMap modelMap = modelAndView.getModelMap();
 		Object mbeiosVO = modelMap.get("mbeiosVO");
+		
+//		if(mbeiosVO == null) {
+//			response.sendRedirect("/member/login");
+//			return;
+//		}
 		
 		if(mbeiosVO != null) {
 			

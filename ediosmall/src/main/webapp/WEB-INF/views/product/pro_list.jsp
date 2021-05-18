@@ -88,9 +88,45 @@
 			    			<button id="btnSearch" class="btn btn-secondary" type="button">검색</button>					
 					</form>
 				</div>
+				
 			
 			</div>				
-			<br><br><br>
+			<br>
+			
+			<div class="row">
+			    	<div class="col-lg-12">
+			    		<!-- 페이징 표시 -->
+
+			    			<div class="panel-footer" style="text-align: center;">
+							<nav aria-label="Page navigation example">	
+								<ul class="pagination justify-content-center">
+								  <c:if test="${pageMaker.prev}">
+									    <li class="page-item">
+									      <a href="${pageMaker.startPage - 1 }" class="page-link" href="#" tabindex="-1" >Prev</a>
+									    </li>
+								  </c:if>  
+								    <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage}" var="num">
+								   	  <li class="page-item  ${pageMaker.cri.pageNum == num ? "active" : ""}">
+								   	  	<a href="${num }" class="page-link" href="#">${num}</a></li>
+								    </c:forEach>
+								  
+								  <c:if test="${pageMaker.next}">
+									    <li class="page-item">
+									      <a href="${pageMaker.endPage + 1 }" class="page-link" href="#">Next</a>
+									    </li>
+								  </c:if>    
+								</ul>
+							</nav>	  
+							<!--
+			    				<hr>    				
+			    				${pageMaker }  -->
+			    			</div>
+			    			
+			    			
+			    		</div>	
+			    			
+			    	</div>
+			    	<br>
 				
     
    	 	<div class="row">
@@ -136,41 +172,9 @@
 				</table>
     			</div>
     			
-    			<br>
-    			<div class="row">
-			    	<div class="col-lg-12">
-			    		<!-- 페이징 표시 -->
-
-			    			<div class="panel-footer" style="text-align: center;">
-							<nav aria-label="Page navigation example">	
-								<ul class="pagination justify-content-center">
-								  <c:if test="${pageMaker.prev}">
-									    <li class="page-item">
-									      <a href="${pageMaker.startPage - 1 }" class="page-link" href="#" tabindex="-1" >Prev</a>
-									    </li>
-								  </c:if>  
-								    <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage}" var="num">
-								   	  <li class="page-item  ${pageMaker.cri.pageNum == num ? "active" : ""}">
-								   	  	<a href="${num }" class="page-link" href="#">${num}</a></li>
-								    </c:forEach>
-								  
-								  <c:if test="${pageMaker.next}">
-									    <li class="page-item">
-									      <a href="${pageMaker.endPage + 1 }" class="page-link" href="#">Next</a>
-									    </li>
-								  </c:if>    
-								</ul>
-							</nav>	  
-							<!--
-			    				<hr>    				
-			    				${pageMaker }  -->
-			    			</div>
-			    			
-			    			
-			    		</div>	
-			    			
-			    	</div>
+    			
 			    </div>
+			    <br><br>
 	
 	<!-- 페이지 번호 클릭시, 수정클릭시 상품코드정보추가, 삭제클릭시 상품코드정보추가 -->		    
 	<form id="actionForm" action="/product/pro_list" method="get">

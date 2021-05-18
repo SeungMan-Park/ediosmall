@@ -51,16 +51,24 @@ public class MemberController {
 	@PostMapping(value = "/loginPost")
 	public void login_ok(LoginDTO dto, RedirectAttributes rttr, HttpSession session, Model model) throws Exception {
 		
+		String result = "loginIDFail";  
+		
 		log.info("loginPost : " + dto);
 		
 		MbeiosVO vo = service.login_ok(dto);
 		
 		log.info("dto.getMbei_password() : " + dto.getMbei_password());
-		log.info("vo.getMbei_password() : " + vo.getMbei_password());
 		
-//		if(vo == null) return;
+		if(vo == null) {
+			result = "loginIDNullFail";
+			return;
+		}
 		
-		String result = "loginIDFail";  
+		log.info("vo.getMbei_password() : " + vo.getMbei_password());  // 여기를 노린다.
+		
+		//if(vo == null) return ;
+		
+		
 		
 		if(vo != null) {
 			

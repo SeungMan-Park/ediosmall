@@ -166,7 +166,7 @@ desired effect
 									<ul class="mailbox-attachments clearfix uploadedList">
 									</ul>
 
-									<button id="btn_Remove" type="button" class="btn btn-primary">Remove</button>
+									<!-- <button id="btn_Remove" type="button" class="btn btn-primary">Remove</button>  -->
 									<button id="btn_submit" type="button" class="btn btn-primary">Modify</button>
 									<button id="btn_List"   type="button" class="btn btn-primary">List</button>
 

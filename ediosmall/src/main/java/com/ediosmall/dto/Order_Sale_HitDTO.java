@@ -6,7 +6,8 @@ import lombok.Data;
 public class Order_Sale_HitDTO {
 	
 	private String name;
-	private int code;
+	private int pdtei_num;
 	private int amount;
+	private int amount2;
 
 }

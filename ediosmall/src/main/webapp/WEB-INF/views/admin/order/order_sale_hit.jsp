@@ -113,6 +113,8 @@ desired effect
 			      <th scope="col">상품명</th>
 			      <th scope="col">상품코드</th>
 			      <th scope="col">판매량</th>
+			      <th scope="col">재고량</th>
+			      <th scope="col">재고관리</th>
 			    </tr>
 			  </thead>
 			  <tbody>
@@ -123,21 +125,73 @@ desired effect
 			     	 ${Order_Sale_HitDTO.name}
 			      </th>
 			      <td>			
-			         ${Order_Sale_HitDTO.code}
+			         ${Order_Sale_HitDTO.pdtei_num}
 			      </td>			      
 			      <td>			
 			         ${Order_Sale_HitDTO.amount}
-			      </td>			      
-			    </tr>
+			      </td>
+			      <td>
+			      	 ${Order_Sale_HitDTO.amount2}
+			      </td>
+			      <td>
+			      	<button type="button" data-pdtei_num="${Order_Sale_HitDTO.pdtei_num}" class="btn btn-primary btn-edit">수정</button>
+			      </td>
+			      	
+		       </tr>
 			   </c:forEach>
 			   </tbody>
 			</table>
 	  			</div>
 	  		</div>
 	  	</div>
+	  	
+	<!-- 페이지 번호 클릭시, 수정클릭시 상품코드정보추가, 삭제클릭시 상품코드정보추가 -->		    
+	<form id="actionForm" action="/admin/product/pro_list" method="get">
+		<input type="hidden" name="pageNum" value='<c:out value="1" />'>
+		<input type="hidden" name="amount"  value='<c:out value="5" />'>		
+		<input type="hidden" name="type"    value='<c:out value="${pageMaker.cri.type }" />'>
+		<input type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword }" />'>
+	</form>
+	
+	
 	  </div>
     
-    
+<script>
+
+	$(document).ready(function(){
+
+		var actionForm = $("#actionForm");
+
+		$(".page-item a").on("click", function(e){
+
+			e.preventDefault();
+
+			console.log("click");
+
+			actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+			actionForm.submit();
+
+		});
+
+		// 수정 클릭시
+
+		$("table td .btn-edit").on("click", function(){
+			console.log('수정');
+			
+			// 상품번호값을 필드로 추가작업
+			actionForm.append("<input type='hidden' name='pdtei_num' value='" + $(this).attr("data-pdtei_num") + "'>");
+
+			actionForm.attr("action", "/admin/product/modify");
+			actionForm.submit();
+
+		});
+
+		
+	});
+	
+
+
+</script>
     
     
 

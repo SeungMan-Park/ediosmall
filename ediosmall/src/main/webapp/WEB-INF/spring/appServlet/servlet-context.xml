@@ -86,6 +86,7 @@
 		
 		<interceptor>
 			<mapping path="/member/loginPost"/>
+			<exclude-mapping path="/member/checkIdDuplicate"/>
 		 	<beans:ref bean="userLoginInterceptor" /> <!-- 인증세션작업 -->
 		</interceptor>	
 		
