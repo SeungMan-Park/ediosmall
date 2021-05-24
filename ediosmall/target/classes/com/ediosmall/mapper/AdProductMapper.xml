@@ -115,5 +115,35 @@
 		  from productei_tbl
 		 where pdtei_num = #{pdtei_num} 
 	</delete>
+	
+	<select id="pro_amount" resultType="com.ediosmall.domain.ProductVO">
+		select pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		  from productei_tbl
+		 order by pdtei_amount
+	</select>
+	
+	<select id="pro_amount2" resultType="com.ediosmall.domain.ProductVO">
+		<![CDATA[ 
+		select 
+		       pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		  from 
+		      (
+		       select /*+ index_desc(productei_tbl pk_product) */ rownum rn, 
+		              pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		         from (select pdtei_num, pdtei_name, pdtei_price, pdtei_amount from productei_tbl order by pdtei_amount) 
+		        where pdtei_num > 0 and 
+		 ]]>
+		 
+		 		<include refid="criteria"></include>       
+		 
+		 <![CDATA[        
+		        	  rownum > 0 and rownum <= #{pageNum} * #{amount}
+		        order by pdtei_amount 	  
+		      )
+		      
+		 where rn  > (#{pageNum}-1) * #{amount}
+		 order by pdtei_amount
+		]]>	
+	</select>
 
 </mapper>

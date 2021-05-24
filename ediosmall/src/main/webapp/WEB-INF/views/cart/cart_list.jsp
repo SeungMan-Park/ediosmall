@@ -62,7 +62,7 @@
 			<%-- Main content --%>
 			<section class="content container-fluid">
 			
-			<div class="container" style="width: 30%; min-width: 900px; background-color: white; font-size: 14px;" >	
+			<div class="container" style="width: 30%; min-width: 1000px; background-color: white; font-size: 14px;" >	
 				
 					<div class="panel panel-default">
 						<div class="panel-heading text-right">
@@ -78,7 +78,7 @@
 										<th scope="col">번호</th>
 										<th scope="col">사진</th>
 										<th scope="col">상품명</th>
-										<th scope="col">수량</th>
+										<th scope="col">주문수량</th>
 										<th scope="col">금액</th>
 										<th scope="col">배송비</th>
 										<th scope="col">취소</th>
@@ -104,7 +104,11 @@
 												</td>
 												<th scope="row">${i}</th>
 												<td>
+												
+												<a href="/product/product_read?pdtei_num=${cartList.pdtei_num}">
 													<img src="/cart/displayFile?fileName=${cartList.pdtei_image}">
+												</a>	
+													
 												</td>
 												<td>
 													<c:out value="${cartList.pdtei_name}"></c:out>
@@ -137,14 +141,43 @@
 							</table>
 						</div>
 
-						<div id="sum_price" class="panel-footer">
-							<table class="table table-striped">
+						<div>
+							<table>
 								<tr>
+									<td>
 									<button name="btn_cart_clear" type="button" class="btn btn-link">장바구니 비우기</button>
-									<!-- <button name="btn_cart_clear2" type="button" class="btn btn-link">장바구니 비우기2</button>  -->
+									
+
 									<button name="btn_order" type="button" class="btn btn-link">전체상품 주문</button>
 									<button name="btn_chk_order" type="button" class="btn btn-link">선택상품 주문</button>
+						
+								
+								
+									</td>
 								</tr> 
+							
+							
+							<%--<c:forEach items="${cartVOList2 }" var="cartList2">
+								<tr>
+									<td>
+									<button name="btn_cart_clear" type="button" class="btn btn-link">장바구니 비우기</button>
+									
+
+								<c:if test="${cartList2.pdtei_amount != 0}">
+									<button name="btn_order" type="button" class="btn btn-link">전체상품 주문</button>
+									<button name="btn_chk_order" type="button" class="btn btn-link">선택상품 주문</button>
+								</c:if>
+						
+								<c:if test="${cartList2.pdtei_amount == 0}">
+									<span style="color: red;">상품페이지에 재고량 관련 댓글을 남겨주시면, 우선적으로 제고량을 확보하기 위해 노력하겠습니다. </span>
+								</c:if>	
+								
+								
+									</td>
+								</tr> 
+							 	
+							</c:forEach>
+							--%>
 							</table>
 						</div>
 						</div>

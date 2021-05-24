@@ -59,7 +59,7 @@ desired effect
 		
 			<!-- Left side column. contains the logo and sidebar -->
 			<!-- 관리자기능 메뉴 포함-->	
-		<%@include file="/WEB-INF/views/admin/include/main-header.jsp" %> 
+		<%@include file="/WEB-INF/views/admin/include/main-header2.jsp" %> 
 			
 		 
 		<!-- Left side column. contains the logo and sidebar -->

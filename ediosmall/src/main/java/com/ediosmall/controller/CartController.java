@@ -88,6 +88,7 @@ public class CartController {
 		
 		String mbei_id = ((MbeiosVO) session.getAttribute("loginStatus")).getMbei_id();
 		model.addAttribute("cartVOList", cartService.list_cart(mbei_id));
+		model.addAttribute("cartVOList2", cartService.list_cart(mbei_id));
 		
 	}
 	
@@ -126,6 +127,7 @@ public class CartController {
 		
 		try {
 			cartService.cart_not_check_delete(checkArr);
+			//cartService.cart_check_delete(checkArr);
 			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 		}catch(Exception ex) {
 			entity = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

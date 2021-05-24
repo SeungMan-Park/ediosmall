@@ -1,5 +1,8 @@
 package com.ediosmall.controller;
 
+import java.util.List;
+
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
@@ -20,17 +23,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ediosmall.domain.AdminVO;
 import com.ediosmall.domain.MbeiosVO;
+import com.ediosmall.domain.OrderDetailSeenVO;
 import com.ediosmall.dto.Criteria;
 import com.ediosmall.dto.LoginDTO;
 import com.ediosmall.dto.PageDTD;
+import com.ediosmall.service.AdProductService;
+import com.ediosmall.service.AdReviewService;
 import com.ediosmall.service.AdminService;
+import com.ediosmall.service.BoardService;
+import com.ediosmall.service.OrderService;
+import com.ediosmall.util.FileUtils;
 
+import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
 @RequestMapping("/admin/*")
+@AllArgsConstructor
 public class AdminController {
 	
 	@Inject	
@@ -38,7 +49,19 @@ public class AdminController {
 	
 	@Setter(onMethod_ = @Autowired)
 	private AdminService adminService;
+	
+	private AdReviewService adReviewService;
+	
+	private BoardService adboardservice;
 
+	@Setter(onMethod_ = @Autowired)
+	private OrderService orderService;
+	
+	private AdProductService adProductservice;
+	
+	@Resource(name ="uploadPath")
+	private String uploadPath;	
+	
 	@GetMapping("")
 	public String admin_main() {
 		
@@ -74,8 +97,9 @@ public class AdminController {
 	}
 	
 	
-	@GetMapping("/admin_process")
-	public String admin_process(HttpSession session) {
+//	@GetMapping("/admin_process")
+	@RequestMapping(value = "/admin_process", method = {RequestMethod.GET, RequestMethod.POST})	
+	public String admin_process(HttpSession session, @ModelAttribute("cri") Criteria cri, Model model) throws Exception {
 		
 		log.info("admin_process");
 		
@@ -87,8 +111,58 @@ public class AdminController {
 			url = "/admin/admin_process";  // 관리자 메인진입주소
 		}
 		
+		// 리뷰관련 정보
+		model.addAttribute("adReview_list", adReviewService.getReviewListWithPagingAd(cri));
+		int total = adReviewService.getCountByReview(cri);
+		model.addAttribute("pageMaker", new PageDTD(cri, total));
+		
+		// 게시판 관련 정보
+		model.addAttribute("list", adboardservice.getListWithSearchPaging(cri));
+		int total2 = adboardservice.getTotalCount(cri);
+		model.addAttribute("pageMaker", new PageDTD(cri, total2));
+		
+		// 주문 관련 정보
+		model.addAttribute("order_list", orderService.orderInfo_list(cri));
+		int total3 = orderService.getTotalCountOrder(cri);
+		model.addAttribute("pageMaker", new PageDTD(cri, total3));
+		
+		// 제고 관련 정보
+		model.addAttribute("pro_amount", adProductservice.pro_amount2(cri));
+		int total4 = adProductservice.getTotalCountProduct(cri);
+		model.addAttribute("pageMaker", new PageDTD(cri, total4));
+		
 		return url; // redirect가 사용하면 주소의미, 사용하지않으면 jsp 파일명
 	}
+	
+	// ajax에서 넘어온 주문번호 파라미터를 가지고 주문상세테이블에 쿼리를 구성해야 한다.
+	// 조건식에 주문번호를 넣는다. odr_code를 받아서 상세정보를 알아내야 한다.
+	@GetMapping("/orderDetailSeen")
+	@ResponseBody
+	public ResponseEntity<List<OrderDetailSeenVO>> OrderDetailSeen(long odr_code) throws Exception {
+		
+		log.info("OrderDetailSeen : "+ odr_code);
+		
+		ResponseEntity<List<OrderDetailSeenVO>> entity = null;
+		
+		
+		try {
+			entity = new ResponseEntity<List<OrderDetailSeenVO>>(orderService.OrderDetailSeen(odr_code), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<List<OrderDetailSeenVO>>(HttpStatus.BAD_REQUEST);
+		}
+				
+		return entity;
+	}
+	
+	// 상품이미지 뷰
+	@ResponseBody
+	@GetMapping("/displayFile")
+	public ResponseEntity<byte[]> displayFile(String fileName) throws Exception{
+		
+		return FileUtils.getFile(uploadPath, fileName);
+	}
+	
 	
 	@PostMapping("/admin_logout")
 	public String admin_logout(HttpSession session, RedirectAttributes rttr) {

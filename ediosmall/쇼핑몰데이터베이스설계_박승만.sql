@@ -1635,3 +1635,256 @@ select
 		 group by o.pdtei_num
          order by amount DESC          
 */
+
+select pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+  from productei_tbl
+ order by pdtei_amount DESC
+; 
+
+
+select 
+       p.pdtei_num as pdtei_num,
+       r.mbei_id as mbei_id,        
+       p.pdtei_name as pdtei_name,        
+       r.rv_score as rv_score,
+       r.rv_contects as rv_contects,
+       r.brd_date_reg as brd_date_reg     
+  from review_tbl r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+;
+
+select 
+       p.pdtei_num as pdtei_num,
+       r.mbei_id as mbei_id,        
+       p.pdtei_name as pdtei_name,        
+       r.rv_score as rv_score,
+       r.rv_contects as rv_contects,
+       r.brd_date_reg as brd_date_reg     
+  from (
+        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+		  	   		  rv_num, mbei_id, pdtei_num, 
+		       		  rv_contects, rv_score, brd_date_reg
+		       	 from review_tbl
+                 
+                 
+        ) r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+;
+
+
+select 
+       p.pdtei_num as pdtei_num,
+       r.mbei_id as mbei_id,        
+       p.pdtei_name as pdtei_name,        
+       r.rv_score as rv_score,
+       r.rv_contects as rv_contects,
+       r.brd_date_reg as brd_date_reg     
+  from (
+        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+		  	   		  rv_num, mbei_id, pdtei_num, 
+		       		  rv_contects, rv_score, brd_date_reg
+		       	 from review_tbl
+                where
+                      rownum > 0 and rownum <= 11
+                 
+        ) r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+ where rn  > 0  
+;
+
+/*
+<![CDATA[
+select 
+       p.pdtei_num as pdtei_num,
+       r.mbei_id as mbei_id,        
+       p.pdtei_name as pdtei_name,        
+       r.rv_score as rv_score,
+       r.rv_contects as rv_contects,
+       r.brd_date_reg as brd_date_reg     
+  from (
+        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+		  	   		  rv_num, mbei_id, pdtei_num, 
+		       		  rv_contects, rv_score, brd_date_reg
+		       	 from review_tbl
+                where
+]]>
+<include refid="criteria"></include>
+<![CDATA[    
+	                    rownum > 0 and rownum <= #{pageNum} * #{amount}
+]]>                        
+                 
+        ) r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+<![CDATA[
+ where rn  > (#{pageNum}-1) * #{amount}
+]]>  
+*/
+
+select count(*) 
+from review_tbl 
+where pdtei_num > 0
+;
+
+
+		select count(*) 
+		  from review_tbl 
+		 where rv_num > 0
+         ;
+         
+select 
+       p.pdtei_num as pdtei_num,
+       r.mbei_id as mbei_id,        
+       p.pdtei_name as pdtei_name,        
+       r.rv_score as rv_score,
+       r.rv_contects as rv_contects,
+       r.brd_date_reg as brd_date_reg     
+  from review_tbl r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+;
+
+select count(*)
+  from review_tbl r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+ where rv_num > 0
+; 
+
+select count(*)
+  from review_tbl r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+ where r.rv_num > 0
+; 
+
+select count(r.rv_num)
+  from review_tbl r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+ where r.rv_num > 0
+; 
+
+
+select 
+       p.pdtei_num as pdtei_num,
+       r.mbei_id as mbei_id,        
+       p.pdtei_name as pdtei_name,        
+       r.rv_score as rv_score,
+       r.rv_contects as rv_contects,
+       r.brd_date_reg as brd_date_reg     
+  from (
+        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+		  	   		  rv_num, mbei_id, pdtei_num, 
+		       		  rv_contects, rv_score, brd_date_reg
+		       	 from review_tbl
+                where      
+(  mbei_id like '%' || 'paradigm2' || '%' )
+                rownum > 0 and rownum <= 5
+                 
+        ) r inner join productei_tbl p
+    on r.pdtei_num = p.pdtei_num
+ where rn  > 0
+;
+
+
+			select brd_num, mbei_id, brd_title, brd_contents, brd_date_reg
+			from 
+			(
+				select /*+ index_desc(board_tbl pk_board) */ rownum rn, brd_num, mbei_id, brd_title, brd_contents, brd_date_reg 
+		        from board_tbl 
+		        where  
+	       (  mbei_id like '%' || "paradigm2" || '%' )
+	        rownum > 0 and rownum <= 5
+	        )
+			where rn  > 0
+            ;
+            
+ 
+select 
+       p.pdtei_num as pdtei_num,
+       r.mbei_id as mbei_id,        
+       p.pdtei_name as pdtei_name,        
+       r.rv_score as rv_score,
+       r.rv_contects as rv_contects,
+       r.brd_date_reg as brd_date_reg     
+  from (
+        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+		  	   		  rv_num, mbei_id, pdtei_num, 
+		       		  rv_contects, rv_score, brd_date_reg
+		       	 from review_tbl
+                where
+                      rownum > 0 and rownum <= 11
+                 
+        ) r inner join 
+        (
+        select pdtei_num, pdtei_name
+          from productei_tbl
+         where pdtei_num > 0
+        ) p       
+    on r.pdtei_num = p.pdtei_num
+ where rn  > 0  
+;
+
+select pdtei_num, pdtei_name
+  from productei_tbl
+ where pdtei_num > 0 
+ 
+select rv_num, mbei_id, pdtei_num, rv_contects, rv_score, brd_date_reg
+  from review_tbl
+ where rv_num = 1
+; 
+
+
+
+		select 
+		       pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		  from 
+		      (
+		       select /*+ index_desc(productei_tbl pk_product) */ rownum rn, 
+		              pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		         from productei_tbl 
+		        where pdtei_num > 0 and 
+		 
+		 
+		        	  rownum > 0 and rownum <= 5		       
+		      )
+		      
+		 where rn  > 0
+		 order by pdtei_amount ASC;
+         
+         
+         select 
+		       pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		  from 
+		      (
+		       select /*+ index_desc(productei_tbl pk_product) */ rownum rn, 
+		              pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		         from productei_tbl 
+		        where pdtei_num > 0 and 
+		 
+		 
+		        	  rownum > 0 and rownum <= 5		       
+		      )
+		      
+		 where rn  > 0
+         
+     order by pdtei_amount ASC; 
+     
+     
+     select 
+		       pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		  from 
+		      (
+		       select /*+ index_desc(productei_tbl pk_product) */ rownum rn, 
+		              pdtei_num, pdtei_name, pdtei_price, pdtei_amount
+		         from (select pdtei_num, pdtei_name, pdtei_price, pdtei_amount from productei_tbl order by pdtei_amount) 
+		        where pdtei_num > 0 and 
+		 
+		 
+		        	  rownum > 0 and rownum <= 5		       
+		      )
+		      
+		 where rn  > 0
+         
+
+
+		 
+         
+         
+         

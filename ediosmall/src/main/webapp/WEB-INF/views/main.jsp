@@ -57,6 +57,10 @@
           font-size: 3.5rem;
         }
       }
+
+
+ 
+      
     </style>
     
   </head>
@@ -121,8 +125,6 @@
 </div>
     	
     	
-    </div>
-  </div>
 
 </main><!-- /.container -->
 

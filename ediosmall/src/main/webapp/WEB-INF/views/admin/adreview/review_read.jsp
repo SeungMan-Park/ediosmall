@@ -51,7 +51,7 @@ desired effect
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					Page Header <small>Optional description</small>
+					review_read <small>Optional description</small>
 				</h1>
 				<ol class="breadcrumb">
 					<li>
@@ -64,8 +64,6 @@ desired effect
 			<!-- Main content -->
 			<section class="content container-fluid">
 	
-	
-			
 
 <!-- 주문통계리스트 -->
 	<div class="row">
@@ -76,55 +74,66 @@ desired effect
     
     <div class="row">
     	<div class="col-lg-12">
-    		<h1 class="page-header">Tables List</h1>
+    	<!-- 	<h1 class="page-header">Review List</h1>  -->
     	</div>
     </div>
         
     <div class="row">
+    
+    <%-- Main content --%>
+			<section class="content container-fluid">
+			
+			<div class="container" style="width: 30%; min-width: 900px; background-color: white; font-size: 14px;" >
+			<br>
+    
+    
     	<div class="col-lg-12">
     		<div class="panel panel-default">
     			<div class="panel-heading">
-    			 Modify Page
+    			 리뷰 조회
     			</div>
     			
     			<div class="panel-body">
     		
-    		 	<form role="form" id="myForm" method="post" action="/admin/board/modify">
 					  <div class="form-group">
-					    <label for="exampleFormControlInput1">BNO</label>
-					    <input type="text" name="brd_num" value="<c:out value="${board.brd_num }"></c:out>" class="form-control" readonly> 
+					    <label for="exampleFormControlInput1">댓글관리번호</label>
+					    <input type="text" name="rv_num" value="${adReview_read.rv_num }" class="form-control" readonly>
 					  </div>
 					  <div class="form-group">
-					    <label for="exampleFormControlInput1">Title</label>
-					    <input type="text" name="brd_title" value="<c:out value="${board.brd_title }"></c:out>" class="form-control"> 
+					    <label for="exampleFormControlInput1">상품번호</label>
+					    <input type="text" name="pdtei_num" value="${adReview_read.pdtei_num }" class="form-control" readonly>
 					  </div>
 					  <div class="form-group">
-					    <label for="exampleFormControlTextarea1">Content</label>
-					    <textarea  name="brd_contents" class="form-control" rows="3"><c:out value="${board.brd_contents }"></c:out></textarea> 
+					    <label for="exampleFormControlInput1">작성자</label>
+					    <input type="text" name="mbei_id" value="${adReview_read.mbei_id }" class="form-control" readonly>
 					  </div>
 					  <div class="form-group">
-					    <label for="exampleFormControlInput1">Writer</label>
-					    <input type="text" name="mbei_id" value="<c:out value="${ board.mbei_id}"></c:out>" class="form-control"  readonly> 
+					    <label for="exampleFormControlInput1">평점</label>
+					    <input type="text" name="rv_score" value="${adReview_read.rv_score }" class="form-control" readonly>
 					  </div>
-					  
-    			 <!-- 리스트버튼,수정버튼을 클릭하면, 수정 폼페이지로 필요한 정보를 보내기위한 작업  -->					  
-    			 	<input type="hidden" id="pageNum" name="pageNum" value="${cri.pageNum }" />
-    			 	<input type="hidden" id="amount" name="amount" value="${cri.amount }" />
-					<input type="hidden" name="type" value='<c:out value="${cri.type }" />'>
-					<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }" />'>					  
-    			 </form>					  
+					  <div class="form-group">
+					    <label for="exampleFormControlTextarea1">내용</label>
+					    <textarea  name="rv_contects" class="form-control" rows="3" readonly>${adReview_read.rv_contects }</textarea>
+					  </div>
+					  <div class="form-group">
+					    <label for="exampleFormControlInput1">작성일</label>
+					    <input type="text" name="brd_date_reg" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${adReview_read.brd_date_reg }"/>" class="form-control"  readonly>
+					  </div>
 					  					  
 					  <div class="form-group">
 					  
-					   <button id="btnRemove" type="button" class="btn btn-danger">Remove</button>
 					   <button id="btnModify" type="button" class="btn btn-primary">Modify</button>
-					   <button id="btnList"   type="button" class="btn btn-info">List</button>
+					   <button id="btnList" type="button" class="btn btn-info">List</button>
 					  </div>
 
-
-    			
-
-
+    			 <!-- 리스트버튼,수정버튼을 클릭하면, 수정 폼페이지로 필요한 정보를 보내기위한 작업  -->
+    			 <form id="operForm" action="/admin/adreview/admodify" method="get">
+    			 	<input type="hidden" id="rv_num" name="rv_num" value="<c:out value="${adReview_read.rv_num }"></c:out>">
+    			 	<input type="hidden" id="pageNum" name="pageNum" value="${cri.pageNum }" />
+    			 	<input type="hidden" id="amount" name="amount" value="${cri.amount }" />
+					<input type="hidden" name="type" value='<c:out value="${cri.type }" />'>
+					<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }" />'>
+    			 </form>
     			 
     			</div>
     			
@@ -132,6 +141,10 @@ desired effect
     			
     		</div>
     	</div>
+    	
+    	</div>
+    	</section>
+    	
     </div>
      
   </div>
@@ -148,14 +161,16 @@ desired effect
 
   $(document).ready(function(){
 
-	var form = $("#myForm");
+	var form = $("#operForm");
+
+
 
 	//리스트버튼 클릭
 	$("#btnList").click(function(){
 		//location.href = "/board/list";  // 페이지 이동(주소)
 
-		form.attr("action","/admin/board/adList").submit();
-		//form.submit();
+		form.attr("action","/admin/adreview/adreview_list");
+		form.submit();
 
 	});	
 	
@@ -163,22 +178,8 @@ desired effect
 	$("#btnModify").click(function(){
 		//<form>태그정보를 submit작업
 		// 리스트, 수정에 따라서 action주소가 다르기때문에 그에 따른 주소작업을 설정한다.
-		form.attr("action","/admin/board/modify").submit();
+		form.attr("action","/admin/adreview/admodify").submit();
 		//form.submit();
-	});	
-	
-	//삭제버튼 클릭
-	$("#btnRemove").click(function(){
-		//<form>태그정보를 submit작업
-		// 리스트, 수정에 따라서 action주소가 다르기때문에 그에 따른 주소작업을 설정한다.
-		
-		var result = confirm("게시물을 삭제합니까?");
-		if(result){
-		form.attr("action","/admin/board/remove").submit();
-		//form.submit();
-		} else {
-			
-		}
 	});	
 
 
@@ -191,6 +192,13 @@ desired effect
 
 	<script src="/js/member/edit.js"></script>
   
+    <script>
+    	$(document).ready(function(){
+	        $("#regBtn").click(function(){
+	          location.href = "/admin/board/register";
+	        });
+      });
+    </script>
     
     
     

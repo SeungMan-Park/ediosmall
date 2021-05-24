@@ -51,7 +51,7 @@ desired effect
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					Page Header <small>Optional description</small>
+					pro_amount <small>Optional description</small>
 				</h1>
 				<ol class="breadcrumb">
 					<li>
@@ -63,135 +63,139 @@ desired effect
 
 			<!-- Main content -->
 			<section class="content container-fluid">
-	
-	
-			
+	<!-- 
+	<div class="row">
+		<div class="col-lg-12">
+			<form id="formDate" action="/admin/order/order_sale" method="get">
+				<c:set var="today" value="<%=new java.util.Date() %>" />
+				<c:set var="year"><fmt:formatDate value="${today }" pattern="yyyy" /></c:set>
+				<c:set var="month"><fmt:formatDate value="${today }" pattern="MM" /></c:set>
+				<select name="year" id="year">
+					<c:forEach begin="0" end="2" var="i" step="1">
+					<option value="<c:out value="${year-2+i }" />" ${(year-2+i) ==  sel_year ? 'selected':''}>
+					<c:out value="${year-2+i }" />
+					</option>
+					</c:forEach>
+					
+					<c:forEach begin="1" end="2" var="i" step="1">
+					<option value="<c:out value="${year+i }" />" ${(year+i) ==  sel_year ? 'selected':''}><c:out value="${year+i }" /></option>
+					</c:forEach>
+				</select>년
+				<select name="month" id="month">
+					<c:forEach begin="1" end="12"  var="i" step="1">
+					<fmt:formatNumber var="dal" minIntegerDigits="2" value="${i}" type="number" />
+					<fmt:formatNumber var="cur_month" minIntegerDigits="2" value="${month}" type="number" />
+					<option value="${dal }" ${dal == sel_month ? 'selected':'' } >${dal }</option>
+					</c:forEach>
+				</select>월
+				<button id="btnSearch" type="submit" class="btn btn-primary">검색</button>
+
+			</form>
+		</div>
+	</div>
+	 -->		
 
 <!-- 주문통계리스트 -->
 	<div class="row">
 	  	<div class="col-lg-12">
-	  		
-	  		
-	  		<div class="starter-template">
-    
-    <div class="row">
-    	<div class="col-lg-12">
-    		<h1 class="page-header">Tables List</h1>
-    	</div>
-    </div>
-        
-    <div class="row">
-    	<div class="col-lg-12">
-    		<div class="panel panel-default">
-    			<div class="panel-heading">
-    			 Modify Page
-    			</div>
-    			
-    			<div class="panel-body">
-    		
-    		 	<form role="form" id="myForm" method="post" action="/admin/board/modify">
-					  <div class="form-group">
-					    <label for="exampleFormControlInput1">BNO</label>
-					    <input type="text" name="brd_num" value="<c:out value="${board.brd_num }"></c:out>" class="form-control" readonly> 
-					  </div>
-					  <div class="form-group">
-					    <label for="exampleFormControlInput1">Title</label>
-					    <input type="text" name="brd_title" value="<c:out value="${board.brd_title }"></c:out>" class="form-control"> 
-					  </div>
-					  <div class="form-group">
-					    <label for="exampleFormControlTextarea1">Content</label>
-					    <textarea  name="brd_contents" class="form-control" rows="3"><c:out value="${board.brd_contents }"></c:out></textarea> 
-					  </div>
-					  <div class="form-group">
-					    <label for="exampleFormControlInput1">Writer</label>
-					    <input type="text" name="mbei_id" value="<c:out value="${ board.mbei_id}"></c:out>" class="form-control"  readonly> 
-					  </div>
-					  
-    			 <!-- 리스트버튼,수정버튼을 클릭하면, 수정 폼페이지로 필요한 정보를 보내기위한 작업  -->					  
-    			 	<input type="hidden" id="pageNum" name="pageNum" value="${cri.pageNum }" />
-    			 	<input type="hidden" id="amount" name="amount" value="${cri.amount }" />
-					<input type="hidden" name="type" value='<c:out value="${cri.type }" />'>
-					<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }" />'>					  
-    			 </form>					  
-					  					  
-					  <div class="form-group">
-					  
-					   <button id="btnRemove" type="button" class="btn btn-danger">Remove</button>
-					   <button id="btnModify" type="button" class="btn btn-primary">Modify</button>
-					   <button id="btnList"   type="button" class="btn btn-info">List</button>
-					  </div>
-
-
-    			
-
-
-    			 
-    			</div>
-    			
-    			
-    			
-    		</div>
-    	</div>
-    </div>
-     
-  </div>
-	  		
-	  		
-	  		
-	  		
+	  		<div class="panel panel-default">
+	  		<!--
+	  			<div class="panel-heading text-right">
+	  			 <button id="regBtn" type="button" class="btn btn-primary pull-right">글쓰기</button>
+	  			</div>
+	  		-->	
+	  			
+	  			<div class="panel-body">
+	  			 <!-- 리스트 -->
+	  			 <table class="table table-striped">
+			  <thead>
+			    <tr>
+			      <th scope="col">순번</th>
+			      <th scope="col">상품번호</th>
+			      <th scope="col">상품명</th>
+			      <th scope="col">가격</th>
+			      <th scope="col">재고량</th>
+			      <th scope="col">재고관리</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  <c:set var="i" value="${cri.pageNum }" />
+			  <c:forEach items="${pro_amount }" var="pro_amount" varStatus="status">
+			    <tr>
+			      <td>
+				      	${(cri.pageNum - 1) * cri.amount + status.count}
+				  </td>
+			      <td>
+			     	 ${pro_amount.pdtei_num}
+			      </td>
+			      <td>			
+			         ${pro_amount.pdtei_name}
+			      </td>			      
+			      <td>			
+			         ${pro_amount.pdtei_price}
+			      </td>
+			      <th scope="row">
+			      	 ${pro_amount.pdtei_amount}
+			      </th>
+			      <td>
+			      	<button type="button" data-pdtei_num="${pro_amount.pdtei_num}" class="btn btn-primary btn-edit">수정</button>
+			      </td>
+			      	
+		       </tr>
+			   </c:forEach>
+			   </tbody>
+			</table>
+	  			</div>
+	  		</div>
 	  	</div>
+	  	
+	<!-- 페이지 번호 클릭시, 수정클릭시 상품코드정보추가, 삭제클릭시 상품코드정보추가 -->		    
+	<form id="actionForm" action="/admin/product/pro_list" method="get">
+		<input type="hidden" name="pageNum" value='<c:out value="1" />'>
+		<input type="hidden" name="amount"  value='<c:out value="5" />'>		
+		<input type="hidden" name="type"    value='<c:out value="${pageMaker.cri.type }" />'>
+		<input type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword }" />'>
+	</form>
+	
+	
 	  </div>
     
- 
- 
 <script>
 
-  $(document).ready(function(){
+	$(document).ready(function(){
 
-	var form = $("#myForm");
+		var actionForm = $("#actionForm");
 
-	//리스트버튼 클릭
-	$("#btnList").click(function(){
-		//location.href = "/board/list";  // 페이지 이동(주소)
+		$(".page-item a").on("click", function(e){
 
-		form.attr("action","/admin/board/adList").submit();
-		//form.submit();
+			e.preventDefault();
 
-	});	
-	
-	// 수정버튼 클릭
-	$("#btnModify").click(function(){
-		//<form>태그정보를 submit작업
-		// 리스트, 수정에 따라서 action주소가 다르기때문에 그에 따른 주소작업을 설정한다.
-		form.attr("action","/admin/board/modify").submit();
-		//form.submit();
-	});	
-	
-	//삭제버튼 클릭
-	$("#btnRemove").click(function(){
-		//<form>태그정보를 submit작업
-		// 리스트, 수정에 따라서 action주소가 다르기때문에 그에 따른 주소작업을 설정한다.
-		
-		var result = confirm("게시물을 삭제합니까?");
-		if(result){
-		form.attr("action","/admin/board/remove").submit();
-		//form.submit();
-		} else {
+			console.log("click");
+
+			actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+			actionForm.submit();
+
+		});
+
+		// 수정 클릭시
+
+		$("table td .btn-edit").on("click", function(){
+			console.log('수정');
 			
-		}
-	});	
+			// 상품번호값을 필드로 추가작업
+			actionForm.append("<input type='hidden' name='pdtei_num' value='" + $(this).attr("data-pdtei_num") + "'>");
+
+			actionForm.attr("action", "/admin/product/modify");
+			actionForm.submit();
+
+		});
+
+		
+	});
+	
 
 
-  });
-
-
-  
 </script>
-
-
-	<script src="/js/member/edit.js"></script>
-  
-    
     
     
 

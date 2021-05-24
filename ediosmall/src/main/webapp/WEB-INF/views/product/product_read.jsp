@@ -192,11 +192,25 @@
           판매가 : <strong class="d-inline-block mb-2 text-primary">${productVO.pdtei_price}</strong>
           할인율 : <strong class="d-inline-block mb-2 text-primary">${productVO.pdtei_discount}</strong>
           제조사 : <strong class="d-inline-block mb-2 text-primary">${productVO.pdtei_producer}</strong>
-          수량 :  <input type="text" value="1" id="pdtei_amount" name="pdtei_amount" >
+          재고량 : <strong class="d-inline-block mb-2 text-primary">${productVO.pdtei_amount}</strong>  
+          <c:if test="${productVO.pdtei_amount != 0}">
+          주문수량 :  <input type="text" value="1" id="pdtei_amount" name="pdtei_amount" >
+          
           
           	  <button type="button" id="btnOrder" name="btn_direct_buy" class="btn btn-link">즉시구매</button>
-	    	  <button type="button" id="btnCart" class="btn btn-link">장바구니</button>
+	          	  <c:if test="${sessionScope.loginStatus != null }">
+			    	  <button type="button" id="btnCart" class="btn btn-link">장바구니</button>
+			    	  <button type="button" id="btnReview" class="btn btn-link">상품후기</button>
+		    	  </c:if>
+		      <br><c:if test="${sessionScope.loginStatus == null }"><p style="color: blue;" align="center">* 로그인을 통해 다양한 기능을 경험하세요</p></c:if> 	  
+	      </c:if>	
+	      
+          <c:if test="${productVO.pdtei_amount == 0}">
+          	  <span style="color: red;">상품관련 의견(후기) 남겨주시면, 우선적으로 재고량을 확보하겠습니다.</span>
 	    	  <button type="button" id="btnReview" class="btn btn-link">상품후기</button>
+	      </c:if>	      
+	        
+	    	  
         </div>
 
         <form id="order_direct_form" method="get" action="/order/order"> 
@@ -502,6 +516,7 @@
       $("#reviewListView").on("click", ".btn-del", function(){
 
         console.log("후기삭제버튼");
+        
 
         // 모달대화상자 표시 - 수정내용 반영
 

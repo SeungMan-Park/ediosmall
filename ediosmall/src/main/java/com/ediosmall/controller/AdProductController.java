@@ -168,6 +168,14 @@ public class AdProductController {
 		}
 		
 	}
+	
+	// 상품관리를 위한 리스트(amount)
+	@GetMapping("/pro_amount")
+	public void pro_amount(Model model) throws Exception {
+		
+		model.addAttribute("pro_amount", service.pro_amount());
+		
+	}
 		
 	// 상품리스트
 	@GetMapping("/pro_list")

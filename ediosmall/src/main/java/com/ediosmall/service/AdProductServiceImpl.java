@@ -68,4 +68,16 @@ public class AdProductServiceImpl implements AdProductService {
 		pro_mapper.product_deleteOk(pdtei_num);
 	}
 
+	@Override
+	public List<ProductVO> pro_amount() throws Exception {
+		// TODO Auto-generated method stub
+		return pro_mapper.pro_amount();
+	}
+
+	@Override
+	public List<ProductVO> pro_amount2(Criteria cri) throws Exception {
+		// TODO Auto-generated method stub
+		return pro_mapper.pro_amount2(cri);
+	}
+
 }

@@ -107,7 +107,7 @@ desired effect
 					  <th scope="col">이미지</th>
 				      <th scope="col">가격</th>
 				      <th scope="col">작성일</th>
-				      <th scope="col">상품표시</th>
+				      <th scope="col">재고량</th>
 				      <th scope="col">수정</th>
 				      <th scope="col">삭제</th>
 				    </tr>
@@ -117,7 +117,7 @@ desired effect
 				    <tr>
 				      <th scope="row"><c:out value="${proVO.pdtei_num }"></c:out></th>
 				      <td>
-				      	<c:out value="${proVO.pdtei_name }"></c:out></a>
+				      	<c:out value="${proVO.pdtei_name }"></c:out>
 				      </td>
 					  <td>
 						<img src="/admin/product/displayFile?fileName=${proVO.pdtei_image}">
@@ -125,10 +125,14 @@ desired effect
 				      <td><fmt:formatNumber type="currency" value="${proVO.pdtei_price }"></fmt:formatNumber></td>
 				      <td><fmt:formatDate pattern="yyyy-MM-dd" value="${proVO.pdtei_date_sub }"/></td>
 				      <td>
+				      
+				      	<c:out value="${proVO.pdtei_amount }"></c:out>
+				      	<!-- 
 				      	<select>
 				      		<option <c:out value="${proVO.pdtei_buy == 'Y' ? 'selected' : ''}"></c:out>>Y</option>
 				      		<option <c:out value="${proVO.pdtei_buy == 'N' ? 'selected' : ''}"></c:out>>N</option>
 				      	</select>
+				      	 -->
 				      </td>
 				      <td>
 				      	<button type="button" data-pdtei_num="${proVO.pdtei_num}" class="btn btn-primary btn-edit">수정</button>
@@ -383,12 +387,20 @@ $(document).ready(function(){
 		$("table td .btn-del").on("click", function(){
 			console.log('삭제');
 			
+			var result = confirm("상품을 삭제합니까?");
+			
+			if(result){
+			
 			// 상품번호값을 필드로 추가작업
 			actionForm.append("<input type='hidden' name='pdtei_num' value='" + $(this).attr("data-pdtei_num") + "'>");
 			actionForm.append("<input type='hidden' name='pdtei_image' value='" + $(this).attr("data-pdtei_image") + "'>");
 
 			actionForm.attr("action", "/admin/product/delete");
 			actionForm.submit();
+			
+			}else {
+				
+			}
 
 		});
 

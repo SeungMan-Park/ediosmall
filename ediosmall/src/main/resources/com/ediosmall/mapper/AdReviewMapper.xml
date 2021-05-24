@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ediosmall.mapper.AdReviewMapper">
+
+<sql id="criteria">
+		<trim prefix="(" suffix=")  and" prefixOverrides="OR" > 
+	       <foreach item="type" collection="typeArr">
+	         <trim prefix="OR">	
+	       	<choose>
+	       		<when test="type == 'T'.toString()">
+	       			mbei_id like '%' || #{keyword} || '%'
+	       		</when>
+	       		<when test="type == 'C'.toString()">
+	       			rv_score like '%' || #{keyword} || '%'
+	       		</when>
+	       		<when test="type == 'W'.toString()">
+	       			rv_contects like '%' || #{keyword} || '%'
+	       		</when>
+	       	</choose>
+	         </trim>
+	       </foreach> 
+	    </trim>
+</sql>
+
+
+	<select id="getReviewListWithPagingAd" resultType="com.ediosmall.domain.ReviewVO">
+		<![CDATA[
+		select 
+		       rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg    
+		  from (
+		        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+				  	   		  rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg
+				       	 from review_tbl
+		                where
+		]]>
+	       <include refid="criteria"></include>
+	     <![CDATA[    
+		        rownum > 0 and rownum <= #{pageNum} * #{amount}
+		        )
+				where rn  > (#{pageNum}-1) * #{amount}
+		 ]]>
+	</select>
+
+	<select id="getCountByReview" resultType="int">
+		select count(*) 
+		  from review_tbl
+		 where 
+		  <include refid="criteria"></include>
+		<![CDATA[
+				rv_num > 0
+		]]>
+	</select>
+	
+	<select id="review_read" resultType="com.ediosmall.domain.ReviewVO">
+		<![CDATA[
+			SELECT rv_num, mbei_id, pdtei_num, rv_contects, rv_score, brd_date_reg
+	        FROM review_tbl
+	        WHERE rv_num = #{rv_num}
+		]]>
+	</select>
+	
+	<update id="modify">
+		update review_tbl
+		   set mbei_id=#{mbei_id},
+		   	   pdtei_num=#{pdtei_num},
+		   	   rv_contects=#{rv_contects},
+		   	   rv_score=#{rv_score},
+		   	   brd_date_reg = sysdate
+		 where rv_num = #{rv_num}	
+	</update>
+	
+	<delete id="remove">
+		delete from review_tbl where rv_num = #{rv_num}
+	</delete>
+	
+
+</mapper>

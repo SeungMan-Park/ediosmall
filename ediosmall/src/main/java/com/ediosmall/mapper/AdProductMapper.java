@@ -31,5 +31,11 @@ public interface AdProductMapper {
 	
 	// 상품 삭제하기
 	public void product_deleteOk(long pdtei_num) throws Exception;
+	
+	// 상품관리를 위한 리스트(amount)
+	public List<ProductVO> pro_amount() throws Exception;
+	
+	// 메인페이지의 상품관리를 위한 리스트(amount)
+	public List<ProductVO> pro_amount2(Criteria cri) throws Exception;
 
 }

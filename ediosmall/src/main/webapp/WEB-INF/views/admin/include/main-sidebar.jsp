@@ -88,12 +88,15 @@
 					</li>
 					-->
 					<li class="treeview">
-						<a href="#"><i class="fa fa-link"></i> <span>게시판관리</span> <span class="pull-right-container">
+						<a href="#"><i class="fa fa-link"></i> <span>게시판/리뷰관리</span> <span class="pull-right-container">
 								<i class="fa fa-angle-left pull-right"></i>
 							</span> </a>
 						<ul class="treeview-menu">
 							<li>
-								<a href="${pageContext.request.contextPath }/admin/board/adList">등록/변경/삭제</a>
+								<a href="${pageContext.request.contextPath }/admin/board/adList">게시판</a>
+							</li>
+							<li>
+								<a href="${pageContext.request.contextPath }/admin/adreview/adreview_list">리뷰</a>
 							</li>
 							<!-- 
 							<li>
@@ -103,7 +106,7 @@
 						</ul>
 					</li>
 					<li class="treeview">
-						<a href="#"><i class="fa fa-link"></i> <span>통계/매출현황관리</span> <span class="pull-right-container">
+						<a href="#"><i class="fa fa-link"></i> <span>통계/재고관리</span> <span class="pull-right-container">
 								<i class="fa fa-angle-left pull-right"></i>
 							</span> </a>
 						<ul class="treeview-menu">
@@ -113,7 +116,10 @@
 							</li>
 							 -->
 							<li>
-								<a href="/admin/order/order_sale_hit">히트상품</a>
+								<a href="${pageContext.request.contextPath }/admin/order/order_sale_hit">히트상품</a>
+							</li>
+							<li>
+								<a href="${pageContext.request.contextPath }/admin/product/pro_amount">재고관리</a>
 							</li>
 						</ul>
 					</li>

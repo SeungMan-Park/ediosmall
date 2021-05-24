@@ -171,8 +171,17 @@
 	$("#btnRemove").click(function(){
 		//<form>태그정보를 submit작업
 		// 리스트, 수정에 따라서 action주소가 다르기때문에 그에 따른 주소작업을 설정한다.
+		
+		var result = confirm("댓글을 삭제합니까?");
+		if(result){
+		
+		
 		form.attr("action","/mypage/board/remove").submit();
 		//form.submit();
+		
+		}else {
+			
+		}
 	});	
 
 

@@ -89,11 +89,19 @@
 				        <input type="hidden" name="pdtei_num" value="${productVO.pdtei_num}">
 				        <span><c:out value="${productVO.pdtei_name}" /></span><br>
 				        <span><fmt:formatNumber type="currency" value="${productVO.pdtei_price }"></fmt:formatNumber></span><br>
-				        <input type="number" style="width: 50px" name="ord_amount" value="1"> 개<br><br>
-				        <button type="button" name="btn_direct_buy" class="btn btn-link">즉시구매</button>
+				        <span>재고량 : <c:out value="${productVO.pdtei_amount}" />개</span><br>
+				                주문 : <input type="number" style="width: 50px" name="ord_amount" value="1"> 개<br><br>
+				   
+				   
+				   <c:if test="${productVO.pdtei_amount != 0}">
+				   		<button type="button" name="btn_direct_buy" class="btn btn-link">즉시구매</button>
+				   		<c:if test="${sessionScope.loginStatus != null }">
 				        
 				        <button type="button" name="btn_cart_add" class="btn btn-link">장바구니</button>
-
+				        </c:if>
+				   </c:if>
+				   				   
+				   
 				      </div>
 			<c:if test="${i%j == j-1 }">
 				 </div>
@@ -104,13 +112,16 @@
 		    </c:when>
 		    
 		    </c:choose>
+		    
 		    </table>
+		    
+		    
 		    <form id="order_direct_form" method="get" action="/order/order"> 
               <input type="hidden" name="type" value="1">
         	</form>
 
 		</div> 
-		
+		<c:if test="${sessionScope.loginStatus == null }"><p style="color: blue;" align="center">* 로그인을 통해 다양한 기능을 경험하세요</p></c:if><br><br>
 		</div>
 		
 				<div class="col-2">
@@ -122,7 +133,9 @@
      	
 </main><!-- /.container -->
 
+		<!-- Main Footer -->
 
+		<%@include file="/WEB-INF/views/common/footer2.jsp" %>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
@@ -267,9 +280,7 @@
 
 
 
-		<!-- Main Footer -->
 
-		<%@include file="/WEB-INF/views/common/footer2.jsp" %>
     
   </body>
 </html>

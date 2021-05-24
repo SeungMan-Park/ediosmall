@@ -14,7 +14,7 @@
 	</insert>	
 	
 	<select id="list_cart" resultType="com.ediosmall.domain.CartVOList">
-		select c.cart_code, p.pdtei_image, p.pdtei_name, c.cart_amount, p.pdtei_price
+		select c.cart_code, p.pdtei_image, p.pdtei_name, p.pdtei_amount, p.pdtei_num, c.cart_amount, p.pdtei_price
 		from productei_tbl p inner join cart_tbl c
 		on p.pdtei_num = c.pdtei_num
 		where c.mbei_id = #{mbei_id}
@@ -34,7 +34,7 @@
 		 where cart_code = #{cart_code}
 	</update>
 	
-	<!-- 선택된 것을 제외한 상품삭제 -->
+	<!-- 선택된 상품삭제 -->
 	<delete id="cart_check_delete">
 		delete 
 		  from cart_tbl

@@ -72,7 +72,7 @@ public class OrderController {
 			ProductVO vo = userProductService.getProductByNum((long)pdtei_num);
 			
 			// 매개변수가 있는 생성자를 만들어서, 디폴트생성자 처리해 줄것!
-			CartVOList cartvo = new CartVOList(0, vo.getPdtei_image(), vo.getPdtei_name(), (int)ord_amount, vo.getPdtei_price());
+			CartVOList cartvo = new CartVOList(0, vo.getPdtei_image(), vo.getPdtei_name(), 0, 0, (int)ord_amount, vo.getPdtei_price());
 			
 			List<CartVOList> cartvoList = new ArrayList<CartVOList>();
 			cartvoList.add(cartvo);

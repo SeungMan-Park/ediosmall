@@ -3,19 +3,20 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+
+ 
+
 .footer {
-  position: fixed;
+  position: relative;
   left: 0;
-  bottom: 0;
-  height: 75px;
-  width: 100%;
-  background-color: #f5f5f5;
+  background-color: white;
   color: black;
   text-align: center;
-}
 </style>
 
 <div class="footer">
-<br>
+	<div>
   <strong>Copyright &copy; 2021 <a href="https://blog.naver.com/paradigm2">Seumg_Man Park</a>.&nbsp;&nbsp;all right reserved.</strong>
+  &nbsp;&nbsp;<span><a href="/admin/">관리자 페이지이동</a></span>
+  	</div>
 </div>
