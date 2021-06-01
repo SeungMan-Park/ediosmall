@@ -42,6 +42,28 @@
 				where rn  > (#{pageNum}-1) * #{amount}
 		 ]]>
 	</select>
+	
+	<select id="getRListWithPagingAd_pro" resultType="com.ediosmall.domain.ReviewVO">
+		<![CDATA[
+		select 
+		       rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg    
+		  from (
+		        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+				  	   		  rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg
+				       	 from review_tbl
+		                where
+		]]>
+	       <include refid="criteria"></include>
+	     <![CDATA[    
+		        rownum > 0 and rownum <= #{pageNum} * #{amount}
+		        )
+				where rn  > (#{pageNum}-1) * #{amount} and pdtei_num = #{pdtei_num}
+		 ]]>
+	</select>
+	
+	
 
 	<select id="getCountByReview" resultType="int">
 		select count(*) 
@@ -60,6 +82,17 @@
 	        WHERE rv_num = #{rv_num}
 		]]>
 	</select>
+	
+	<select id="review_read_pro" resultType="com.ediosmall.domain.ReviewVO">
+		<![CDATA[
+			SELECT rv_num, mbei_id, pdtei_num, rv_contects, rv_score, brd_date_reg
+	        FROM review_tbl
+	        WHERE pdtei_num = #{pdtei_num}
+	        order by brd_date_reg DESC
+		]]>
+	</select>
+	
+
 	
 	<update id="modify">
 		update review_tbl

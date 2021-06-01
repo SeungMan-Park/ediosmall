@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 <!--
@@ -11,6 +12,48 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
 <!-- css file -->
 <%@include file="/WEB-INF/views/admin/include/head_inc.jsp" %>
+<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      
+      /*상품후기 별 스타일*/
+      #star_grade a{
+     	font-size:22px;
+        text-decoration: none;
+        color: lightgray;
+    }
+    #star_grade a.on{
+        color: rgb(235, 202, 18);
+    }
+    
+    #star_grade_modal a{
+     	font-size:22px;
+        text-decoration: none;
+        color: lightgray;
+    }
+    #star_grade_modal a.on{
+        color: black;
+    }
+    
+    .popup {position: absolute;}
+    .back { background-color: gray; opacity:0.5; width: 100%; height: 300%; overflow:hidden;  z-index:1101;}
+    .front { 
+       z-index:1110; opacity:1; boarder:1px; margin: auto; 
+      }
+     
+    </style>
 <script src="/ckeditor/ckeditor.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
 
@@ -147,10 +190,14 @@ desired effect
 										</select>
 										
 										<!-- 원래 리스트상태의 페이지, 검색정보구성 -->
+										<%-- 
 										<input type="hidden" id="pageNum" name="pageNum" value="${cri.pageNum}">
 										<input type="hidden" id="amount"  name="amount"  value="${cri.amount}">
 										<input type="hidden" id="type"    name="type"    value="${cri.type}">
 										<input type="hidden" id="keyword" name="keyword" value="${cri.keyword}">
+										--%>
+										
+										
 									</div>
 									
 									
@@ -167,10 +214,17 @@ desired effect
 									</ul>
 
 									<!-- <button id="btn_Remove" type="button" class="btn btn-primary">Remove</button>  -->
+									<%--<button id="btn_Reply_List" type="button" class="btn btn-primary">Reply_List</button> --%>
 									<button id="btn_submit" type="button" class="btn btn-primary">Modify</button>
 									<button id="btn_List"   type="button" class="btn btn-primary">List</button>
 
 								</div>
+								
+								<!-- 리스트버튼,수정버튼을 클릭하면, 수정 폼페이지로 필요한 정보를 보내기위한 작업  -->					  
+			    			 	<input type="hidden" id="pageNum" name="pageNum" value="${cri.pageNum }" />
+			    			 	<input type="hidden" id="amount" name="amount" value="${cri.amount }" />
+								<input type="hidden" name="type" value='<c:out value="${cri.type }" />'>
+								<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }" />'>	
 							</form>
 
 
@@ -182,6 +236,258 @@ desired effect
 				</div>
 				
 				
+				<!-- 댓글관리 -->
+				<div class="row">
+				
+				
+				<div class="col-lg-12">
+    		<div class="panel panel-default">
+    			
+    			
+    			<div class="panel-body">
+    			
+	    			<div class="box-header">
+						<h3 class="box-title">Review Register</h3>
+						<br><br>
+					
+						<form role="form" method="post" action="/admin/product/review_register">
+						
+						  <div class="col-md-2 mb-2">
+				            <label for="firstName">작성자</label>
+				            <input type="text" name="mbei_id" class="form-control" id="exampleFormControlInput1" value="${sessionScope.adLoginStatus.admin_id}" readonly>
+				            
+				          </div>
+				          <div class="col-md-2 mb-2">
+				            <label for="lastName">평점</label>
+				            <input type="text" name="rv_score" class="form-control" id="exampleFormControlInput1" value="5">
+				            
+				          </div>
+				          <div class="col-md-8 mb-2">
+				          <label for="lastName" style="display: none;">작성</label><br>
+				            <button type="submit" id="review_reg" class="btn btn-secondary pull-right">리뷰등록</button>
+				            <div class="invalid-feedback">
+				            </div>
+				          </div>
+				          
+				          <div class="col-md-12 mb-12">
+				            <label for="lastName"></label>
+				            <textarea  name="rv_contects" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="내용입력"></textarea>
+				            
+				          </div>
+							
+						</form>
+    			</div>
+    			
+    			<br><br>
+    			<div class="box-header">
+						<h3 class="box-title">Review List</h3>
+						<br><br>
+    			 <!-- 리스트 -->
+    			 <table class="table table-striped">
+				  <thead>
+				    <tr>
+				      <th scope="col">작성자</th>
+				      <th scope="col">평점</th>
+				      <th scope="col">내용/수정</th>
+				      <th scope="col">작성일</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  <c:forEach items="${adReview_list }" var="arvVO" varStatus="status">
+				    <tr>
+				      <td><a class="move_mbei_id" href="${arvVO.mbei_id }"><c:out value="${arvVO.mbei_id }"></c:out></a></td>
+				      <td><c:out value="${arvVO.rv_score }"></c:out></td>
+				      <td><a class="move_rv_num" href="${arvVO.rv_num }"><c:out value="${arvVO.rv_contects }"></c:out></a></td>
+				      <td><fmt:formatDate pattern="yyyy-MM-dd" value="${arvVO.brd_date_reg }"/></td>
+				      <%-- <td><a class="move" href="${arvVO.brd_num }"><c:out value="${arvVO.brd_title }"></c:out></a></td> --%>
+				    </tr>
+				  </c:forEach>  
+				   </tbody>
+				</table>
+    			</div>
+    			</div>
+    			
+    			
+    		
+    							
+
+   
+  
+    
+
+
+
+	<form id="actionForm" action="/admin/adreview/adreview_list" method="get">	
+		<input type="hidden" name="pageNum" value='1'>
+		<input type="hidden" name="amount" value='5'>
+		<input type="hidden" name="type" value='<c:out value="${pageMaker.cri.type }" />'>
+		<input type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword }" />'>
+	</form>
+
+
+				</div>
+		 	</div>
+					
+
+
+
+					
+
+				</div>
+				
+
+
+<script>
+
+  $(document).ready(function(){
+
+
+	var searchForm = $("#searchForm");
+
+	var actionForm = $("#actionForm");
+	// 제목 클릭시 다음 주소로 이동.
+	$(".move_pdtei_num").on("click", function(e){
+		// 링크시 쿼리스트링정보(페이징,검색)를 다음주소로 보내는 작업
+		// form태그 사용
+
+		// <a href=""></a>, <input type="submit">
+		e.preventDefault(); // 태그가 가지고있는 기본이벤트 성격을 취소.
+		actionForm.append("<input type='hidden' name='pdtei_num' value='"  + $(this).attr("href") + "'>");
+		actionForm.attr("action", "/admin/product/modify");
+		actionForm.submit();
+	});
+	
+	$(".move_mbei_id").on("click", function(e){
+		// 링크시 쿼리스트링정보(페이징,검색)를 다음주소로 보내는 작업
+		// form태그 사용
+
+		// <a href=""></a>, <input type="submit">
+		e.preventDefault(); // 태그가 가지고있는 기본이벤트 성격을 취소.
+		actionForm.append("<input type='hidden' name='mbei_id' value='"  + $(this).attr("href") + "'>");
+		actionForm.attr("action", "/admin/member/user_modify");
+		actionForm.submit();
+	});	
+	
+	$(".move_rv_num").on("click", function(e){
+		// 링크시 쿼리스트링정보(페이징,검색)를 다음주소로 보내는 작업
+		// form태그 사용
+
+		// <a href=""></a>, <input type="submit">
+		e.preventDefault(); // 태그가 가지고있는 기본이벤트 성격을 취소.
+		actionForm.append("<input type='hidden' name='rv_num' value='"  + $(this).attr("href") + "'>");
+		actionForm.attr("action", "/admin/adreview/review_read");
+		actionForm.submit();
+	});
+	
+	
+	
+
+	// [prev] 1 2 3 4 5 [next]
+	$(".page-item a").on("click", function(e){
+		e.preventDefault();
+
+		console.log("click");
+		
+		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+		actionForm.submit();
+
+	});
+	//동적으로 추가된 요소에는 이벤트를 설정할려면 on 으로 작업해야 한다.
+	$("#searchForm #btnSearch").on("click", function(e){
+		if(!searchForm.find("option:selected").val()){
+			alert("검색종류를 선택하세요");
+			return false;
+		}
+
+		if(!searchForm.find("input[name='keyword']").val()){
+			alert("검색어를 선택하세요");
+			return false;
+		}
+
+		// 검색시 페이지를 1로 시작해야 한다.
+		// 리스트에서 변경된 페이지번호가 사용하여 검색결과가 안나올수 있다.
+		searchForm.find("input[name='pageNum']").val("1");
+
+		e.preventDefault();
+
+		searchForm.submit();
+
+	});
+
+
+
+  });
+
+
+  
+</script> 
+
+
+<script>
+
+$(document).ready(function(e){
+	
+	var formObj = $("form[role='form']");
+	
+	
+	//글쓰기 전송작업
+	$("button[type='submit']").on("click", function(e){
+
+		e.preventDefault();// submit전송기능을 취소
+
+		console.log("댓글전송");
+		
+		var pdtei_num = $(this).parent().parent().parent().parent().parent().parent().parent().parent().find("input[name='pdtei_num']").val();
+		var mbei_id = $(this).parent().parent().find("input[name='mbei_id']").val();
+		var rv_score = $(this).parent().parent().find("input[name='rv_score']").val();
+		var rv_contects = $(this).parent().parent().find("textarea[name='rv_contects']").val();
+		
+		
+		console.log("상품코드 : " + pdtei_num);
+		console.log("작성자 : " + mbei_id);
+		console.log("평점 : " + rv_score);
+		console.log("내용 : " + rv_contects);
+		
+		//return;
+		
+		if(rv_score == null || rv_score == ""){
+			alert("평점을 입력 하세요");
+			return;
+			
+		} else if(rv_contects == null || rv_contects  == ""){ 
+			alert("내용을 입력하세요");
+			return;
+			
+		} else {
+			
+			$.ajax({
+		          url : "/admin/product/review_register",
+		          type : "post",
+		          data : {pdtei_num : pdtei_num, mbei_id : mbei_id, rv_score : rv_score, rv_contects : rv_contects},
+		          dataType : "text",
+		          success : function(data){
+		        	  
+		        	  formObj.submit(); 
+		        	  return;
+
+		          }
+		        }); 
+		}
+
+		return;
+				
+		//formObj.submit();
+		
+
+
+	});
+	
+});
+
+
+</script>
+
+  				
 				
 				
 

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,21 +30,30 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ediosmall.domain.CategoryVO;
 import com.ediosmall.domain.ProductVO;
+import com.ediosmall.domain.ReviewVO;
 import com.ediosmall.dto.Criteria;
 import com.ediosmall.dto.PageDTD;
 import com.ediosmall.service.AdProductService;
+import com.ediosmall.service.AdReviewService;
+import com.ediosmall.service.ReviewService;
 import com.ediosmall.util.FileUtils;
 
+import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
 @RequestMapping("/admin/product/*")
+@AllArgsConstructor
 public class AdProductController {
 	
 	@Setter(onMethod_ = @Autowired)
 	private AdProductService service;
+	
+	private AdReviewService adReviewService;
+	
+	private ReviewService reviewService; 
 	
 	@Resource(name ="uploadPath")  // 상품등록시 상품이미지 경로
 	private String uploadPath;  // servlet-context.xml에 설정
@@ -178,9 +188,9 @@ public class AdProductController {
 	}
 		
 	// 상품리스트
-	@GetMapping("/pro_list")
-//	@RequestMapping(value = "/pro_list", method = {RequestMethod.GET, RequestMethod.POST})
-	public String product_list(@ModelAttribute("cri") Criteria cri, Model model) throws Exception {
+//	@GetMapping("/pro_list")
+	@RequestMapping(value = "/pro_list", method = {RequestMethod.GET, RequestMethod.POST})
+	public void product_list(@ModelAttribute("cri") Criteria cri, Model model) throws Exception {
 		
 		log.info("called pro_list ... " + cri);
 		
@@ -193,7 +203,7 @@ public class AdProductController {
 		// 2) 페이징 정보.  [이전] 1 2 3 4 5 6 ... [다음]
 		model.addAttribute("pageMaker", new PageDTD(cri, totalCount));
 		
-		return "/admin/product/product_list";
+		//return "/admin/product/pro_list";
 	}
 	
 	// 상품이미지 뷰
@@ -206,11 +216,10 @@ public class AdProductController {
 		
 	// 상품수정폼
 	@GetMapping("/modify")
-	public String modify(@RequestParam("pdtei_num") Long pdtei_num, @ModelAttribute("cri") Criteria cri, Model model) throws Exception{
-		
+	//public String modify(@RequestParam("pdtei_num") Long pdtei_num, @ModelAttribute("cri") Criteria cri, Model model) throws Exception{
+	public void modify(@RequestParam("pdtei_num") Long pdtei_num, @ModelAttribute("cri") Criteria cri, Model model) throws Exception{	
 		log.info("modify" + pdtei_num);
 		
-		// 1차 카테고리
 		model.addAttribute("categoryList", service.getCategoryList());
 		
 		ProductVO vo = service.product_modify(pdtei_num);
@@ -224,8 +233,29 @@ public class AdProductController {
 		// 2차 카테고리
 		model.addAttribute("subCategoryList", service.getSubCategoryList(cat_code));
 		
-		return "/admin/product/product_modify";
+		// 댓글정보
+		model.addAttribute("adReview_list", adReviewService.review_read_pro(pdtei_num));
+		//model.addAttribute("subCategoryList", adReviewService.review_read_pro(pdtei_num));
+		//int total = adReviewService.getCountByReview(cri);
+		//model.addAttribute("pageMaker", new PageDTD(cri, total));
+		
+		//return "/admin/product/product_modify";
 	}
+	
+	// 댓글추가
+	@PostMapping(value = "/review_register")
+	@ResponseBody
+	public String adReview_register(HttpServletRequest request, ReviewVO vo, HttpSession session) throws Exception {
+		
+		reviewService.review_register(vo);
+		
+		String referer = request.getHeader("referer");
+		
+		return "redirect:"+ referer;
+		
+	}
+	
+	
 	
 	// 상품수정하기
 	@PostMapping("/modify")

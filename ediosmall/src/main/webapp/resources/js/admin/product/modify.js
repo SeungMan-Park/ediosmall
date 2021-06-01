@@ -14,6 +14,13 @@ $(document).ready(function(){
         //form.attr("action","/admin/product/pro_list");
 		//form.submit();
     }); 
+    
+    
+    $("#btn_Reply_List").click(function(){
+
+		form.attr("action","/admin/product/pro_list").submit();
+
+	});
  
     
 });

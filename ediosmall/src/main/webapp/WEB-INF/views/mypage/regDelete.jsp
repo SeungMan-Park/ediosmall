@@ -66,6 +66,13 @@
     
 	<div class="row">
 	
+	<div class="col-3">
+	<br><br>
+	<h4 style="color: black; text-align:center;">MyPage</h4>
+	</div>
+
+	<div class="col-6">
+	
 	<%-- Main content --%>
 	<section class="content container-fluid">
 								
@@ -165,7 +172,7 @@
 					    }
 					</script>
 			</section>
-
+</div>
 						
 		</div>
 		<!-- /.content-wrapper -->

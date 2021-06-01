@@ -9,6 +9,10 @@ public interface AdReviewMapper {
 	
 	public List<ReviewVO> getReviewListWithPagingAd(Criteria cri) throws Exception;
 	
+	public List<ReviewVO> getRListWithPagingAd_pro(Criteria cri) throws Exception;
+	
+	public List<ReviewVO> review_read_pro(Long pdtei_num) throws Exception;
+	
 	public int getCountByReview(Criteria cri);
 	
 	public ReviewVO review_read(Long rv_num);

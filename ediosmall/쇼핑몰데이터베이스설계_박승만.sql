@@ -1880,11 +1880,43 @@ select rv_num, mbei_id, pdtei_num, rv_contects, rv_score, brd_date_reg
 		        	  rownum > 0 and rownum <= 5		       
 		      )
 		      
-		 where rn  > 0
+		 where rn  > 0;
          
 
-
+		select 
+		       rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg    
+		  from (
+		        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+				  	   		  rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg
+				       	 from review_tbl
+		                where
+		        rownum > 0 and rownum <= 20
+		        )
+		  where rn  > 0;
 		 
+select rv_num, mbei_id, pdtei_num, rv_contects, rv_score, brd_date_reg 
+  from review_tbl
+ where pdtei_num = 101; 
+ 
+ 
+        select 
+		       rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg    
+		  from (
+		        select /*+ index_desc(review_tbl pk_review)*/ rownum rn,
+				  	   		  rv_num, mbei_id, pdtei_num, 
+				       		  rv_contects, rv_score, brd_date_reg
+				       	 from review_tbl
+		                where
+		        rownum > 0 and rownum <= 20
+		        )
+		  where rn  > 0 and pdtei_num = 101;
          
-         
-         
+
+SELECT rv_num, mbei_id, pdtei_num, rv_contects, rv_score, brd_date_reg
+  FROM review_tbl
+ WHERE pdtei_num = 101
+ order by brd_date_reg DESC
+            ;

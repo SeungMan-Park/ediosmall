@@ -59,12 +59,17 @@
 
 <main role="main" class=".container-fluid">
 
+
+
+
 <div class="row">
 
 
 				
 				<div class="col-3">
-				 
+					<a href="/product/pro_list" style="float:none;">
+					<h4 style="color: black; text-align:center;">Product Search</h4> 
+					</a>
 				</div>
 				
 				<div class="col-6">

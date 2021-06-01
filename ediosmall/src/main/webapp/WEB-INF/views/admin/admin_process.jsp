@@ -87,7 +87,7 @@ desired effect
 
 <section class="content container-fluid">
 	
-<table style="margin-left:auto; margin-right:auto;">    
+<table style="margin-left:50px; margin-right:auto;">    
 
 <th>
 <td>
@@ -105,6 +105,7 @@ desired effect
     			 <table class="table table-striped">
 				  <thead>
 				    <tr>
+				      <th scope="col">순번</th>	
 				      <th scope="col">작성자</th>
 				      <th scope="col">상품</th>
 				      <th scope="col">평점</th>
@@ -113,8 +114,12 @@ desired effect
 				    </tr>
 				  </thead>
 				  <tbody>
+				  <c:set var="i" value="${cri.pageNum }" />
 				  <c:forEach items="${adReview_list }" var="arvVO" varStatus="status">
 				    <tr>
+				      <td>
+				      	${(cri.pageNum - 1) * cri.amount + status.count}
+				      </td>
 				      <td><a class="move_mbei_id" href="${arvVO.mbei_id }"><c:out value="${arvVO.mbei_id }"></c:out></a></td>
 				      <td><a class="move_pdtei_num" href="${arvVO.pdtei_num }"><c:out value="${arvVO.pdtei_num }"></c:out></a></td>
 				      <td><c:out value="${arvVO.rv_score }"></c:out></td>
@@ -250,22 +255,24 @@ desired effect
     			 <table class="table table-striped">
 				  <thead>
 				    <tr>
+				      <th scope="col">순번</th>
+				      <th scope="col">글번호</th>
+				      <th scope="col">제목</th>
 				      <th scope="col">작성자</th>
-				      <th scope="col">상품코드</th>
-				      <th scope="col">평점</th>
-				      <th scope="col">내용</th>
 				      <th scope="col">작성일</th>
 				    </tr>
 				  </thead>
 				  <tbody>
-				  <c:forEach items="${adReview_list }" var="arvVO" varStatus="status">
+				  <c:set var="i" value="${cri.pageNum }" />
+				  <c:forEach items="${list }" var="brdVO" varStatus="status">
 				    <tr>
-				      <td><a class="move_mbei_id" href="${arvVO.mbei_id }"><c:out value="${arvVO.mbei_id }"></c:out></a></td>
-				      <td><a class="move_pdtei_num" href="${arvVO.pdtei_num }"><c:out value="${arvVO.pdtei_num }"></c:out></a></td>
-				      <td><c:out value="${arvVO.rv_score }"></c:out></td>
-				      <td><a class="move_rv_num" href="${arvVO.rv_num }"><c:out value="${arvVO.rv_contects }"></c:out></a></td>
-				      <td><fmt:formatDate pattern="yyyy-MM-dd" value="${arvVO.brd_date_reg }"/></td>
-				      <%-- <td><a class="move" href="${arvVO.brd_num }"><c:out value="${arvVO.brd_title }"></c:out></a></td> --%>
+				      <td>
+				      	${(cri.pageNum - 1) * cri.amount + status.count}
+				      </td>
+				      <td scope="row"><c:out value="${brdVO.brd_num }"></c:out></td>
+				      <td><a class="move" href="${brdVO.brd_num }"><c:out value="${brdVO.brd_title }"></c:out></a></td>
+				      <td><c:out value="${brdVO.mbei_id }"></c:out></td>
+				      <td><fmt:formatDate pattern="yyyy-MM-dd" value="${brdVO.brd_date_reg }"/></td>
 				    </tr>
 				  </c:forEach>  
 				   </tbody>
@@ -278,7 +285,7 @@ desired effect
   
     
 
-	<form id="actionForm" action="/admin/adreview/adreview_list" method="get">	
+	<form id="actionForm" action="/admin/board/adList" method="get">	
 		<input type="hidden" name="pageNum" value='<c:out value="${pageMaker.cri.pageNum }" />'>
 		<input type="hidden" name="amount" value='<c:out value="${pageMaker.cri.amount }" />'>
 		<input type="hidden" name="type" value='<c:out value="${pageMaker.cri.type }" />'>
@@ -294,6 +301,72 @@ desired effect
 	
 	
 </td>
+<script>
+
+  $(document).ready(function(){
+
+	
+	var result = '${result}';
+	if(result == 'modify'){
+		alert('수정되었습니다.');
+	}else if(result == 'remove'){
+		alert('제거되었습니다.');
+	}
+
+	var searchForm = $("#searchForm");
+
+	var actionForm = $("#actionForm");
+	// 제목 클릭시 다음 주소로 이동.
+	$(".move").on("click", function(e){
+		// 링크시 쿼리스트링정보(페이징,검색)를 다음주소로 보내는 작업
+		// form태그 사용
+
+		// <a href=""></a>, <input type="submit">
+		e.preventDefault(); // 태그가 가지고있는 기본이벤트 성격을 취소.
+		actionForm.append("<input type='hidden' name='brd_num' value='"  + $(this).attr("href") + "'>");
+		actionForm.attr("action", "/admin/board/read");
+		actionForm.submit();
+	});
+
+	// [prev] 1 2 3 4 5 [next]
+	$(".page-item a").on("click", function(e){
+		e.preventDefault();
+
+		console.log("click");
+		
+		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+		actionForm.submit();
+
+	});
+	//동적으로 추가된 요소에는 이벤트를 설정할려면 on 으로 작업해야 한다.
+	$("#searchForm #btnSearch").on("click", function(e){
+		if(!searchForm.find("option:selected").val()){
+			alert("검색종류를 선택하세요");
+			return false;
+		}
+
+		if(!searchForm.find("input[name='keyword']").val()){
+			alert("검색어를 선택하세요");
+			return false;
+		}
+
+		// 검색시 페이지를 1로 시작해야 한다.
+		// 리스트에서 변경된 페이지번호가 사용하여 검색결과가 안나올수 있다.
+		searchForm.find("input[name='pageNum']").val("1");
+
+		e.preventDefault();
+
+		searchForm.submit();
+
+	});
+
+
+
+  });
+
+
+  
+</script> 
 
 </th> 
 
@@ -303,7 +376,7 @@ desired effect
 
 </table>
 
-<table style="margin-left:auto; margin-right:auto;">    
+<table style="margin-left:50px; margin-right:auto;">    
 
 <th>
 
@@ -327,7 +400,6 @@ desired effect
 				      <th scope="col">주문자</th>
 				      <th scope="col">받는분</th>
 				      <th scope="col">금액</th>
-				      <th scope="col">처리상태</th>
 				    </tr>
 				  </thead>
 				  <tbody>
@@ -349,9 +421,7 @@ desired effect
 				      	<fmt:formatNumber type="currency" value="${orderVO.ord_price }"></fmt:formatNumber>
 				      </td>
 				      
-				      <td>
-				      	처리상태
-				      </td>
+				      
 				    </tr>
 				   </c:forEach>
 				   </tbody>
@@ -449,12 +519,11 @@ desired effect
 
 	<tr class="dy_order_detail"><td colspan="8">주문상세내역</td></tr>
 	<tr class="dy_order_detail" style="background: #60c1ee;">
-		<th>번호</th><th>이미지</th><th>상품명</th><th>수량</th><th>상품가격</th><th>소개</th>
+		<th>이미지</th><th>상품명</th><th>수량</th><th>상품가격</th><th>소개</th>
 	</tr>
 	{{#each .}}
 	<tr class="dy_order_detail" style="background: white;">
 		
-		<td>번호</td>
 		<td><img src="/admin/order/displayFile?fileName={{pdtei_image}}"></td>	
 			
 		<td>{{pdtei_name}}</td>
@@ -496,7 +565,6 @@ Handlebars.registerHelper("total_price", function(ord_price, ord_amount){
 	  			 <table class="table table-striped">
 			  <thead>
 			    <tr>
-			      <th scope="col">순번</th>
 			      <th scope="col">상품번호</th>
 			      <th scope="col">상품명</th>
 			      <th scope="col">가격</th>
@@ -505,12 +573,8 @@ Handlebars.registerHelper("total_price", function(ord_price, ord_amount){
 			    </tr>
 			  </thead>
 			  <tbody>
-			  <c:set var="i" value="${cri.pageNum }" />
 			  <c:forEach items="${pro_amount }" var="pro_amount" varStatus="status">
 			    <tr>
-			      <td>
-				      	${(cri.pageNum - 1) * cri.amount + status.count}
-				  </td>
 			      <td>
 			     	 ${pro_amount.pdtei_num}
 			      </td>

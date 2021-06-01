@@ -6,7 +6,7 @@
         <div class="container">
             <div class="navbar-header" style="position:relative; text-align:center; overflow:hidden; width:100%; padding:4px 0 20px 0;margin:0;">
                 <a class="navbar-brand" href="/" style="float:none;">
-                    <span><h2 style="color: black; text-align:center;" >Eidos_fashion</h3></span>
+                    <span><h2 style="color: black; text-align:center;" >Eidos_fashion</h2></span>
                 </a>
 
 				<%-- 

@@ -189,10 +189,6 @@ desired effect
 </script>
 
 
-	<script src="/js/member/edit.js"></script>
-  
-    
-    
     
 
 			</section>

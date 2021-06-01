@@ -59,6 +59,13 @@
 
 			<div class="row">
 			
+			<div class="col-3">
+			<br><br>
+			<h4 style="color: black; text-align:center;">CartList</h4>
+			</div>
+		
+			<div class="col-6">
+			
 			<%-- Main content --%>
 			<section class="content container-fluid">
 			
@@ -183,11 +190,12 @@
 						</div>
 					</div>
 					</section>
+					</div>
 				</div>
 		</main><!-- /.container -->
 
 		<!-- Main Footer -->
-
+	<br><br><br><br><br><br><br><br>
 		<%@include file="/WEB-INF/views/common/footer2.jsp" %>
 
 

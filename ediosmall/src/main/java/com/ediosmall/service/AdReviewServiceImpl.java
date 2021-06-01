@@ -46,6 +46,19 @@ public class AdReviewServiceImpl implements AdReviewService {
 		// TODO Auto-generated method stub
 		return adReviewMapper.remove(rv_num);
 	}
+
+	@Override
+	public List<ReviewVO> getRListWithPagingAd_pro(Criteria cri) throws Exception {
+		// TODO Auto-generated method stub
+		return adReviewMapper.getRListWithPagingAd_pro(cri);
+	}
+
+	@Override
+	public List<ReviewVO> review_read_pro(Long pdtei_num) throws Exception {
+		// TODO Auto-generated method stub
+		return adReviewMapper.review_read_pro(pdtei_num);
+	}
+
 	
 	
 
