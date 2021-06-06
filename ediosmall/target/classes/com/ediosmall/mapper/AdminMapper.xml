@@ -21,11 +21,41 @@
 	       </foreach> 
 	    </trim>	
 	</sql>
+	
+	<sql id="criteria2">
+		<trim prefix="(" suffix=")  and" prefixOverrides="OR" > 
+	       <foreach item="type" collection="typeArr">
+	         <trim prefix="OR">	
+		       	<choose>
+		       		<when test="type == 'N'.toString()">
+		       			admin_id like '%' || #{keyword} || '%'
+		       		</when>
+		       		<when test="type == 'D'.toString()">
+		       			admin_name like '%' || #{keyword} || '%'
+		       		</when>
+		       	</choose>
+	         </trim>
+	       </foreach> 
+	    </trim>	
+	</sql>
+	
 
 	<select id="login_check" resultType="com.ediosmall.domain.AdminVO">
 		select admin_id, admin_pw, admin_name, admin_date_late
 		  from admin_tbl
 		 where admin_id = #{admin_id} and admin_pw = #{admin_pw}
+	</select>
+	
+	<select id="adLogin_dto_ok" resultType="com.ediosmall.domain.AdminVO">
+		select *
+		  from admin_tbl
+		 where admin_id = #{admin_id}
+	</select>
+	
+	<select id="loginRight_check" resultType="com.ediosmall.domain.AdminVO">
+		select admin_id, admin_pw, admin_name, admin_right, admin_date_late
+		  from admin_tbl
+		 where admin_id = #{admin_id} and admin_pw = #{admin_pw} and admin_right = 'Y'
 	</select>
 	
 	<update id="login_update">
@@ -36,8 +66,8 @@
 	
 	<!-- 회원가입 -->
 	<insert id="join">
-		insert into admin_tbl(admin_id, admin_pw, admin_name)
-		values(#{admin_id}, #{admin_pw}, #{admin_name})
+		insert into admin_tbl(admin_id, admin_pw, admin_name, admin_phonenum, admin_email)
+		values(#{admin_id}, #{admin_pw}, #{admin_name}, #{admin_phonenum}, #{admin_email})
 	</insert>
 	
 	<!-- 아이디 중복 체크 -->
@@ -52,10 +82,52 @@
 	</select>		
 	
 	<update id="modifyPOST">
-		update admin_tbl		
-		    set admin_date_late = sysdate
+		update admin_tbl
+		
+			set admin_phonenum = #{admin_phonenum}
+		    ,   admin_email = #{admin_email}
+		    ,   admin_date_late = sysdate
+		    
 		where admin_id = #{admin_id}
 	</update>
+	
+	
+	<select id="admin_list" resultType="com.ediosmall.domain.AdminVO">
+		<![CDATA[
+		select
+				admin_id, admin_pw, admin_name, admin_phonenum, admin_email,
+				admin_right, admin_date_late
+		  from
+		  		(
+	  			select
+	  					/*+ index_desc(admin_tbl pk_admin) */ rownum rn, 
+						admin_id, admin_pw, admin_name, admin_phonenum, admin_email,
+						admin_right, admin_date_late
+				from 	admin_tbl
+					
+		]]>		where   admin_id is not null and
+		
+		 		<include refid="criteria2"></include> 
+		 		
+		 <![CDATA[        
+		        	  rownum > 0 and rownum <= #{pageNum} * #{amount}
+		  		)
+		  		
+		 where  rn  > (#{pageNum}-1) * #{amount}
+		]]>		 		
+		 				
+	</select>
+	
+	<select id="getTotalCountAdmin_list" resultType="int">
+		select count(*)
+		  from admin_tbl
+		 where 
+		  <include refid="criteria2"></include> 
+		  
+		  <![CDATA[
+		  	   admin_id is not null
+		  ]]>
+	</select>
 	
 	<select id="user_list" resultType="com.ediosmall.domain.MbeiosVO">
 		<![CDATA[
@@ -86,6 +158,7 @@
 		]]>		 		
 		 				
 	</select>
+	
 	
 	<select id="getTotalCountUser_list" resultType="int">
 		select count(*)
@@ -119,15 +192,33 @@
 		where MBEI_ID = #{mbei_id}		
 	</update>
 	
+	<update id="adminRightChange">
+		update ADMIN_TBL
+		    set ADMIN_RIGHT = #{admin_right}
+		where ADMIN_ID = #{admin_id}	
+	</update>
+	
 	<update id="user_modify_pw">
 		update mbeios_tbl
 		set mbei_password = #{mbei_password}
 		where mbei_id = #{mbei_id}	
 	</update>
 	
+
 	<delete id="user_delete">
 		delete from mbeios_tbl
 		where MBEI_ID=#{mbei_id}		
+	</delete>
+	
+	<update id="modify_pw">
+		update admin_tbl
+		set admin_pw = #{admin_pw}
+		where admin_id=#{admin_id}
+	</update>
+	
+	<delete id="adDeleteAdmin">
+		delete from admin_tbl
+		where admin_id=#{admin_id}
 	</delete>
 
 </mapper>

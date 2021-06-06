@@ -6,6 +6,9 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.Nullable;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class AdminAuthInterceptor extends HandlerInterceptorAdapter {
@@ -13,6 +16,8 @@ public class AdminAuthInterceptor extends HandlerInterceptorAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(AdminAuthInterceptor.class);
 	private static final String LOGIN = "adLoginStatus";
 	
+	// Object handler : URL Mapping 주소에 해당하는 메서드 자체를 가리킴
+	// 아래 클래스를 빼면 자동(부모에 있는 - HandlerInterceptorAdapter - 작동)으로 작동이 됩니다.
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -26,7 +31,7 @@ public class AdminAuthInterceptor extends HandlerInterceptorAdapter {
 			
 			targetSave(request);
 			
-			response.sendRedirect("/admin/");  // 
+			response.sendRedirect("/admin/login");  // 
 			return false; // Controller로 제어가 넘어가지 않음
 		}
 		

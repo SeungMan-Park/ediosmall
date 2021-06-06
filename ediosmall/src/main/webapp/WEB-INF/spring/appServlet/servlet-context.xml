@@ -59,6 +59,7 @@
 	<beans:bean id="sampleInterceptor" class="com.ediosmall.interceptor.SampleInterceptor"></beans:bean>
 	 -->
 	 
+	<beans:bean id="adminLoginInterceptor" class="com.ediosmall.interceptor.AdminLoginInterceptor"></beans:bean>
 	<beans:bean id="adminAuthInterceptor" class="com.ediosmall.interceptor.AdminAuthInterceptor"></beans:bean>
 	<beans:bean id="userLoginInterceptor" class="com.ediosmall.interceptor.UserLoginInterceptor"></beans:bean>
 	<beans:bean id="userAuthInterceptor" class="com.ediosmall.interceptor.UserAuthInterceptor"></beans:bean>
@@ -67,23 +68,26 @@
 	
 	
 	<interceptors>
-		<!-- 
+		
+		<!-- --> 
 		<interceptor>
-			<mapping path="/sample/methodA"/>
-			<beans:ref bean="sampleInterceptor"/>
-		</interceptor>	
-		-->
-		<interceptor>
-			<mapping path="/admin/**"/>
-			<exclude-mapping path="/admin/"/>
-			<exclude-mapping path="/admin/admin_check"/> <!-- 인증세션작업 -->
-			<exclude-mapping path="/admin/admin_process"/>
-			<exclude-mapping path="/admin/join"/>
-			<exclude-mapping path="/admin/checkIdDuplicate"/>
+			<mapping path="/admin/admin_process"/>
+			<mapping path="/admin/product/*"/>
+			<mapping path="/admin/order/*"/>
+			<mapping path="/admin/board/*"/>
+			<mapping path="/admin/adreview/*"/>
+			<mapping path="/admin/member/*"/>
 		 	<beans:ref bean="adminAuthInterceptor" />
+		</interceptor> 
+		 
+		
+		<!-- --> 
+		<interceptor>
+			<mapping path="/admin/adLoginPost"/>
+			<exclude-mapping path="/admin/checkIdDuplicate"/>
+			<beans:ref bean="adminLoginInterceptor" />
 		</interceptor>
-		
-		
+		 
 		<interceptor>
 			<mapping path="/member/loginPost"/>
 			<exclude-mapping path="/member/checkIdDuplicate"/>
@@ -91,7 +95,6 @@
 		</interceptor>	
 		
 		<interceptor>
-			
 			<mapping path="/order/*"/>
 			<mapping path="/cart/*"/>
 			<mapping path="/mypage/*"/>

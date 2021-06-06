@@ -134,7 +134,9 @@
 							</li>
 							 -->
 							<li>
-								<a href="/admin/member/user_list">회원목록</a>
+								<a href="/admin/member/user_list">사용자 회원목록</a>
+								<a href="/admin/member/admin_list">관리자 회원목록</a>
+								<a href="/admin/member/admodify">내 계정 수정</a>
 							</li>
 						</ul>
 					</li>

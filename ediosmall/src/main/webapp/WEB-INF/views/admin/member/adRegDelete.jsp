@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -11,6 +13,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- css file -->
 <%@include file="/WEB-INF/views/admin/include/head_inc.jsp" %>
 
+
+</head>
 <!--
 BODY TAG OPTIONS:
 =================
@@ -31,40 +35,15 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<meta name="description" content="">
-<meta name="author" content="">
-<link rel="canonical"
-	href="https://getbootstrap.com/docs/3.4/examples/signin/">
-
-<title>ADMIN SIGNIN</title>
-
-
-	<script src="/js/admin/join.js"></script>
-
-</head>
-
 <body class="hold-transition skin-blue sidebar-mini">
-
-
 	<div class="wrapper">
 
-		<!-- Main Header -->
-		
-			<!-- Left side column. contains the logo and sidebar -->
-			<!-- 관리자기능 메뉴 포함-->	
-		<%@include file="/WEB-INF/views/admin/include/main-header.jsp" %> 
+		<!-- Main Header -->		
+			<%@include file="/WEB-INF/views/admin/include/main-header.jsp" %>
 			
-		 
-		<!-- Left side column. contains the logo and sidebar -->
 		
-
-		<%-- <%@include file="/WEB-INF/views/admin/include/main-sidebar.jsp" %> --%>
+		<!-- Left side column. contains the logo and sidebar -->
+			<%@include file="/WEB-INF/views/admin/include/main-sidebar.jsp" %>
 			
 		
 
@@ -73,7 +52,7 @@ desired effect
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					Page Header <small>Optional description</small>
+					user_list <small>Optional description</small>
 				</h1>
 				<ol class="breadcrumb">
 					<li>
@@ -82,70 +61,163 @@ desired effect
 					<li class="active">Here</li>
 				</ol>
 			</section>
-			
-<main role="main" class="container">
 
-  <div>
+			<!-- Main content -->
+			<section class="content container-fluid">
+						
+			<div class="row">
+
+			
+			</div>
+
+
+			<!-- 상품리스트 -->
+	<div class="row">
+	
+
     <%-- Main content --%>
 			<section class="content container-fluid">
-				<div class="container" style="width: 70%; min-width: 900px; background-color: white; font-size: 14px;" >
-					<form id="joinForm" action="/admin/join" method="post">
-						<div class="container" style="width: 800px; padding: 10% 5%;">
-							<h2 class="form-signin-heading">Please Register</h2>
-							<br><br>
-							<div class="form-group">
-								<label for="InputEmail">* 아이디</label><br /> <input type="text" class="form-control" id="admin_id" name="admin_id"
-								placeholder="아이디를 입력해 주세요"	style="max-width:540px; width:calc(100% - 100px); margin-right: 5px; display: inline-block;">
-								<button id="btn_checkId" class="btn btn-light" type="button">중복 확인</button>
-								<p id="id_availability" style="color: red;"></p>
+				
+					<div class="container" style="width: 30%; min-width: 900px; background-color: white; font-size: 14px;" >
+					
+						<br>
+						<%@include file="/WEB-INF/views/admin/member/nav_editer/modify.jsp" %>
+						
+						<form id="adDeleteForm" action="/admin/member/adRegDelete" method="post">
+						
+						<div  class="container" style="width: 800px; padding: 10% 5%;">
+						
+							<h4 class="form-signin-heading" style="text-align: center;">관리자 계정탈퇴</h4>
+							<br><br><c:out value="" />
+							
+							<div class="form-group" style="width:100%;">
+								<label for="inputId">* 아이디</label> <br /> <input type="text"
+									class="form-control" id="admin_id" name="admin_id" value="<c:out value="${vo.admin_id}"/>"
+									readonly style="max-width:540px; width:calc(100% - 100px); margin-right: 5px; display: inline-block;">
 							</div>
+							
 							<div class="form-group">
-								<label for="inputPassword">* 비밀번호</label> <input type="password"
-									class="form-control" id="admin_pw" name="admin_pw"
-									placeholder="비밀번호를 입력해주세요" style="max-width: 630px;">
+								<label for="inputPassword">* 변경할 비밀번호</label> <input type="password"
+									class="form-control" id="admin_pw" name="admin_pw" 
+									placeholder="비밀번호를 입력해 주세요" style="max-width: 630px;">
 							</div>
-							<div class="form-group">
-								<label for="inputPasswordCheck">* 비밀번호 확인</label> <input
-									type="password" class="form-control" id="admin_pw_check"
-									placeholder="비밀번호 확인을 위해 다시한번 입력 해 주세요" style="max-width: 630px;" >
-							</div>
-							<div class="form-group">
-								<label for="inputName">* 이름</label> <input type="text"
-									class="form-control" id="admin_name" name="admin_name"
-									placeholder="이름을 입력해 주세요" style="max-width: 630px;">
-							</div>	
-							<div class="form-group">
-								<label for="inputName">* 휴대전화번호</label> <input type="text"
-									class="form-control" id="admin_phonenum" name="admin_phonenum"
-									placeholder="휴대전화번호를 입력하세요" style="max-width: 630px;">
-							</div>	
-							<div class="form-group">
-								<label for="inputName">* 이메일</label> <input type="text"
-									class="form-control" id="admin_email" name="admin_email"
-									placeholder="이메일주소를 입력하세요" style="max-width: 630px;">
-							</div>							
+							<br>
+							<p style="color: red;">* 비밀번호를 입력하면 계정탈퇴가 가능합니다.</p>
+							
 						</div>
 						<div class="form-group text-center">
-							<button type="button" id="btn_submit" class="btn btn-primary">
-								회원가입 <i class="fa fa-check spaceLeft"></i>
+							<button type="button" id="btn_submit_delete" class="btn btn-secondary">
+								탈퇴 <i class="fa fa-check spaceLeft"></i>
 							</button>
-							<button type="button" id="btn_cancle" class="btn btn-warning">
-								가입취소 <i class="fa fa-times spaceLeft"></i>
+
+							<button type="button" id="btn_cancle" class="btn btn-light">
+								취소 <i class="fa fa-times spaceLeft"></i>
 							</button>
 						</div>
 						<br><br><br><br>
 					</form>
 				</div>
+
 				
-			</section>
-			<!-- /.content -->
-		</div>
-		<!-- /.content-wrapper -->
- 
+					
+<script>
+$(document).ready(function(){
 
-</main><!-- /.container -->			
+    var form = $("#adDeleteForm");
 
+
+    /* 회원탈퇴 버튼 클릭 시 */ 
+	$("#btn_submit_delete").on("click", function(){
+
+        
+        var admin_pw = $("#admin_pw").val();
+        
+
+		console.log("버튼인식 확인");
+        console.log("admin_pw : " + admin_pw);
+        
+
+        // 유효성검사
+        if(admin_pw == null || admin_pw == ""){
+            alert("현재 비밀번호를 입력하세요.");
+            $("#admin_pw").focus();
+            return;
+            
+        }
+        
+        
+
+		// 현재 비밀번호 확인 검사
+		var admin_pw2 = $("#admin_pw").val();
+
+		console.log("admin_pw2 : " + admin_pw);  
+		
+		
+		//return;
+		
+		var result = confirm("계정을 탈퇴하시겠습니까?");
+		if(result){
+		
+        
+			$.ajax({
+				url: "/admin/adcheckPwPOST",
+				type: "post",
+				datatype: "text",
+				data: {admin_pw : admin_pw},
+				success: function(data){
+					if(data=='SUCCESS'){
+						
+						
+						//alert("계정을 탈퇴 합니다.");
+						//return;
+						
+						form.submit();
+						alert("계정을 탈퇴 합니다.");
+					} else{
+						alert("비밀번호가 다릅니다.");
+					//	mbei_password.val("");
+						$("#admin_pw").focus();
+					}
+					
+				}
+				
+			});
 			
+			} else{
+				location.href="/admin/admin_process"; 
+			}
+			
+			
+		});
+
+        //return;
+        
+		/* 취소 버튼 클릭 시 */ 
+		$("#btn_cancle").on("click", function(){
+	
+			location.href="/admin/admin_process"; 
+		});
+
+
+
+
+    });
+
+</script>					
+
+
+			</section>
+			
+			
+		
+
+		</div>
+				
+				
+				
+				
+
+			</section>
 			<!-- /.content -->
 		</div>
 		<!-- /.content-wrapper -->
@@ -243,5 +315,8 @@ desired effect
 	<!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. -->
+
+
+
 </body>
 </html>

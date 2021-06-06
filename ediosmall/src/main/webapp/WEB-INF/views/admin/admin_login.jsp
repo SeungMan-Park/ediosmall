@@ -45,9 +45,6 @@ desired effect
 
 <title>ADMIN SIGNIN</title>
 
-
-	<script src="/js/admin/edit.js"></script>
-
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -96,8 +93,8 @@ desired effect
 			<br>
 			<div class="text-center" style="margin: 10px; padding: 50px;">
 				<div class="container" style="width: 50%; min-width: 70px; background-color: white; font-size: 14px;" >
-					<form class="form-signin" action="/admin/admin_check" method="post">
-					  
+					<%-- <form class="form-signin" action="/admin/admin_check" method="post"> --%>
+					<%-- --%><form class="form-signin" action="/admin/adLoginPost" method="post"> 
 					  <h1 class="h3 mb-3 font-weight-normal">Admin Login</h1>
 					  <label for="inputEmail" class="sr-only">Email address</label>
 					  <br>
@@ -234,6 +231,8 @@ desired effect
 		alert("아이디와 비밀번호를 확인하세요.");
 	}else if(msg == "logout"){
 		alert("로그아웃이 되었습니다.");
+	}else if(msg == "FailRight"){
+		alert("관리자 권한을 받으시기 바랍니다.");
 	}
 </script>
 </body>

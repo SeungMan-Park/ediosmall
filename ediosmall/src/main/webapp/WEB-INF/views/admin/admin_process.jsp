@@ -93,7 +93,7 @@ desired effect
 <td>
 			<!-- 게시물 리스트 -->        
     <div class="row">
-    	<div class="col-lg-12">
+    	<div class="col-lg-12" style="width: 520px;">
     		<div class="panel panel-default">
     			<div style="text-align: center;">
     			<br>
@@ -243,7 +243,7 @@ desired effect
 <td>
 	
 	<div class="row">
-    	<div class="col-lg-12">
+    	<div class="col-lg-12" style="width: 520px;">
     		<div class="panel panel-default">
     			<div style="text-align: center;">
     			<br>

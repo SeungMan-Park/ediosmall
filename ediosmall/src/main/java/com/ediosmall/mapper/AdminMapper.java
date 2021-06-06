@@ -4,11 +4,17 @@ import java.util.List;
 
 import com.ediosmall.domain.AdminVO;
 import com.ediosmall.domain.MbeiosVO;
+import com.ediosmall.dto.AdminDTO;
 import com.ediosmall.dto.Criteria;
 
 public interface AdminMapper {
 	
 	public AdminVO login_check(AdminVO vo) throws Exception;
+	
+	// 인증용
+	public AdminVO adLogin_dto_ok(AdminDTO dto) throws Exception;
+	
+	public AdminVO loginRight_check(AdminVO vo) throws Exception;
 	
 	public void login_update(String admin_id) throws Exception;
 	
@@ -24,7 +30,13 @@ public interface AdminMapper {
 	// 회원수정 저장
 	public int modifyPOST(AdminVO vo) throws Exception;	
 	
-	// 관리자 회원관리_리스트
+	// 관리자 - 관리자 회원관리_리스트
+	public List<AdminVO> admin_list(Criteria cri) throws Exception;
+	
+	public int getTotalCountAdmin_list(Criteria cri) throws Exception;
+	
+	
+	// 관리자 - 사용자 회원관리_리스트
 	public List<MbeiosVO> user_list(Criteria cri) throws Exception;
 	
 	// 회원수(페이징기능에 사용)
@@ -42,6 +54,13 @@ public interface AdminMapper {
 	// 관리자_사용자 계정 삭제 정보 삭제처리
 	public void user_delete(String mbei_name) throws Exception;	
 	
+	// 관리자 회원관리_권한부여
+	public void adminRightChange(AdminVO vo) throws Exception;
 	
+	// 관리자 비밀번호 변경
+	public void modify_pw(AdminVO vo) throws Exception;
+	
+	// 관리자 회원 탈퇴
+	public void adDeleteAdmin(String admin_id) throws Exception;
 
 }

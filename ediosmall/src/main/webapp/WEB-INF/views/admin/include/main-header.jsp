@@ -35,7 +35,7 @@
 							</form>
 						</li>
 						<li>
-							<form action="/admin/modify" method="post">
+							<form action="/admin/member/admodify" method="get">
 								<input type="submit" value="계정수정">
 							</form>
 						</li>

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ediosmall.domain.AdminVO;
 import com.ediosmall.domain.MbeiosVO;
 import com.ediosmall.domain.OrderDetailSeenVO;
+import com.ediosmall.dto.AdminDTO;
 import com.ediosmall.dto.Criteria;
 import com.ediosmall.dto.LoginDTO;
 import com.ediosmall.dto.PageDTD;
@@ -72,13 +73,13 @@ public class AdminController {
 	}
 	
 	
-	// 관리자 로그인(POST)
+	// 관리자 로그인(POST) 1. 일반적인 방식
 	@PostMapping("/admin_check")
 	public String admin_ok(AdminVO vo, RedirectAttributes rttr, HttpSession session) throws Exception {
 		
-		log.info("admin_check : " + vo);
-		
 		AdminVO adVO = null;
+		
+		log.info("admin_check : " + vo);
 		
 		adVO = adminService.login_check(vo);
 		
@@ -93,7 +94,75 @@ public class AdminController {
 		// 세션인증작업
 		session.setAttribute("adLoginStatus", adVO);
 		
+		AdminVO adRightVO = null;
+		
+		adRightVO = adminService.loginRight_check(vo);
+		
+		if(adRightVO == null) {
+			
+			rttr.addFlashAttribute("msg", "FailRight");
+			return "redirect:/admin/";
+		}
+		
+		
 		return "redirect:/admin/admin_process";
+	}
+	
+	// 관리자 로그인(POST) 2. 암호화된 패스워드 활용 - cryPassEnc, AdminDTO dto
+	@PostMapping(value = "/adLoginPost")
+	public String adLoginPost(AdminDTO dto, RedirectAttributes rttr, HttpSession session, Model model) throws Exception {
+		
+		log.info("adLoginPost : " + dto);
+		
+		AdminVO vo = adminService.adLogin_dto_ok(dto);
+		
+		log.info("dto.getAdmin_pw() : " + dto.getAdmin_pw());
+		
+		if(vo == null) {
+			rttr.addFlashAttribute("msg", "Fail");
+			
+			log.info("adLoginPost vo == null: " + dto);
+			log.info("dto.getAdmin_pw() vo == null : " + dto.getAdmin_pw());
+			
+			return "redirect:/admin/";
+		}
+		
+		log.info("vo.getAdmin_pw() : "+vo.getAdmin_pw());
+		
+		if(vo != null) {
+			if(cryPassEnc.matches(dto.getAdmin_pw(), vo.getAdmin_pw())) {
+				
+				// 인터셉터에서 참조할 모델작업
+				model.addAttribute("adminVO", vo);
+				
+				// 세션인증작업
+				session.setAttribute("adLoginStatus", vo);
+				
+				log.info("adLoginPost vo != null: matchesOK  : " + dto);
+				log.info("dto.getAdmin_pw() vo != null : matchesOK : " + dto.getAdmin_pw());
+				
+			}else {
+				rttr.addFlashAttribute("msg", "Fail");
+				log.info("adLoginPost vo != null: matchesNot : " + dto);
+				log.info("dto.getAdmin_pw() vo != null : matchesNot : " + dto.getAdmin_pw());
+				return "redirect:/admin/";
+			}
+		}
+		
+		
+		// 관리자 사용권한 부여
+		AdminVO adRightVO = null;
+		
+		adRightVO = adminService.loginRight_check(vo);
+		
+		if(adRightVO == null) {
+			
+			rttr.addFlashAttribute("msg", "FailRight");
+			return "redirect:/admin/";
+		}
+		
+		return "redirect:/admin/admin_process";
+	
 	}
 	
 	
@@ -186,9 +255,11 @@ public class AdminController {
 	@PostMapping("/join")
 	public String join(AdminVO vo, RedirectAttributes rttr) throws Exception{
 		
-		String result = "";
-		
 		log.info(vo);
+		
+		vo.setAdmin_pw(cryPassEnc.encode(vo.getAdmin_pw()));
+		
+		String result = "";
 		
 		adminService.join(vo);
 		
@@ -233,7 +304,7 @@ public class AdminController {
 		
 	}
 	
-	@GetMapping("/modify")
+	@GetMapping("/member/admodify")
 	public void reg_edit(HttpSession session, Model model) throws Exception	{
 		
 		String admin_id = ((AdminVO) session.getAttribute("adLoginStatus")).getAdmin_id();
@@ -244,23 +315,53 @@ public class AdminController {
 		
 	}
 	
-	@PostMapping("/modify")
+	
+	@PostMapping("/member/admodify")
 	public String modifyPOST(AdminVO vo, RedirectAttributes rttr, HttpSession session) throws Exception{
 		
-		String result = "";
 		
 		String admin_id = ((AdminVO) session.getAttribute("adLoginStatus")).getAdmin_id();
 		vo.setAdmin_id(admin_id);
+		vo.setAdmin_pw(cryPassEnc.encode(vo.getAdmin_pw()));
 		
 		adminService.modifyPOST(vo);
-		result = "modifySuccess";
+		log.info("정보변경 확인?  " + vo);
 		
-		rttr.addFlashAttribute("status", result);
-		
-		return "redirect:/admin/modify";
+				
+		return "redirect:/admin/member/admodify";
 	}
 	
-	// 관리자 회원관리_리스트
+	// 관리자 - 관리자 회원관리_리스트
+	@GetMapping("/member/admin_list")
+	public String admin_list(@ModelAttribute("cri") Criteria cri, Model model) throws Exception {
+		
+		log.info("user_list ... " + cri);
+		
+	
+		// 1) 회원 데이터
+		model.addAttribute("admin_list", adminService.admin_list(cri));
+		
+		int totalCount = adminService.getTotalCountAdmin_list(cri);
+		
+		// 2) 페이징 정보.  [이전] 1 2 3 4 5 6 ... [다음]
+		model.addAttribute("pageMaker", new PageDTD(cri, totalCount));
+		
+		return "/admin/member/admin_list";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "adminRightChange", method=RequestMethod.POST)
+	public String adminRightChange(AdminVO vo) throws Exception{
+		
+		adminService.adminRightChange(vo);
+		
+		
+		return "/admin/member/admin_list";
+	}
+	
+	
+	
+	// 관리자 - 사용자 회원관리_리스트
 	@GetMapping("/member/user_list")
 	public String user_list(@ModelAttribute("cri") Criteria cri, Model model) throws Exception {
 		
@@ -358,6 +459,118 @@ public class AdminController {
 		
 	}	
 	
+	// 관리자 비밀번호 변경
+	@GetMapping("/member/modify_pw")
+	public void modify_pw() {
+		log.info("관리자 비밀번호 변경");
+	}
+	
+	@PostMapping("/member/modify_pw")
+	public String modify_pw(AdminVO vo, RedirectAttributes rttr, HttpSession session) throws Exception {
+		
+		String admin_id = ((AdminVO) session.getAttribute("adLoginStatus")).getAdmin_id();
+		vo.setAdmin_id(admin_id);
+		vo.setAdmin_pw(cryPassEnc.encode(vo.getAdmin_pw()));
+		
+		log.info("=====modify_pw... 변경전");
+		log.info("=====cryPassEnc.encode(vo.getAdmin_pw()) : " + cryPassEnc.encode(vo.getAdmin_pw()));
+		log.info("=====vo.getAdmin_pw() : " + vo.getAdmin_pw());
+		log.info("=====vo.toString() : " + vo.toString());
+		
+		adminService.modify_pw(vo);
+		
+		log.info("=====modify_pw... 변경후");
+		log.info("=====cryPassEnc.encode(vo.getAdmin_pw()) : " + cryPassEnc.encode(vo.getAdmin_pw()));
+		log.info("=====vo.getAdmin_pw() : " + vo.getAdmin_pw());
+		log.info("=====vo.toString() : " + vo.toString());
+		
+		
+		return "redirect:/admin/member/modify_pw";
+	}
+	
+	// 비밀번호 확인
+	@ResponseBody
+	@RequestMapping(value = "adcheckPwPOST")
+	public ResponseEntity<String> adcheckPwPOST(@RequestParam("admin_pw") String admin_pw, HttpSession session){
+		
+		ResponseEntity<String> entity = null;
+		
+		AdminVO vo = (AdminVO) session.getAttribute("adLoginStatus");
+		
+		log.info("=====adcheckPwPOST execute()... 인증전");
+		log.info("=====admin_pw : " + admin_pw);
+		log.info("=====admin_pw : " + vo.toString());
+		
+		if(cryPassEnc.matches(admin_pw, vo.getAdmin_pw())) {
+			
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+			
+			log.info("=====adcheckPwPOST execute()... 인증후 : 성공");
+			log.info("=====admin_pw : " + admin_pw);
+			log.info("=====admin_pw : " + vo.toString());
+			
+		}else {
+			entity = new ResponseEntity<String>("FAIL", HttpStatus.OK);
+			log.info("=====adcheckPwPOST execute()... 인증후 : 실패");
+			log.info("=====admin_pw : " + admin_pw);
+			log.info("=====admin_pw : " + vo.toString());
+		}
+		
+		return entity;
+	}
+	
+	// 관리자_관리자 비밀번호 변경(임시)
+	@GetMapping("/member/modify_pw_imsi")
+	public void modify_pw_imsi() throws Exception {
+		
+		log.info("modify_pw_imsi");
+		
+	}
+	
+	// 관리자_관리자 비밀번호 변경-저장(임시)
+	@PostMapping("/member/modify_pw_imsi")
+	public String modify_pw_imsi(AdminVO vo) throws Exception {
+		
+		vo.setAdmin_pw(cryPassEnc.encode(vo.getAdmin_pw()));
+		adminService.modify_pw(vo);
+		log.info("=====admin_pw : " + vo);
+		log.info("=====admin_pw(vo) : " + vo.toString());
+		
+		return "redirect:/admin/member/modify_pw_imsi";
+	}
+	
+	// 관리자_관리자 탈퇴기능
+	@GetMapping("/member/adRegDelete")
+	public void adRegDelete(HttpSession session, Model model) throws Exception {
+		
+		log.info("관리자 회원기능 탈퇴");
+		
+		String admin_id = ((AdminVO) session.getAttribute("adLoginStatus")).getAdmin_id();
+		
+		log.info("관리자 정보 수정");
+		
+		model.addAttribute("vo", adminService.member_info(admin_id));
+		
+	}
+	
+	@PostMapping("/member/adRegDelete")
+	public String adRegDelete(HttpSession session, RedirectAttributes rttr) throws Exception {
+		
+		log.info("adDeletePOST()1...");
+		
+		String admin_id = ((AdminVO) session.getAttribute("adLoginStatus")).getAdmin_id();
+		
+		adminService.adDeleteAdmin(admin_id);
+		
+		log.info("adDeletePOST()2...");
+		
+		session.invalidate();
+		
+		log.info("adDeletePOST()3...");
+		
+		
+		return "redirect:/admin/";
+	}
 	
 
 }

@@ -40,6 +40,8 @@ CREATE TABLE MBEIOS_TBL (
 alter TABLE MBEIOS_TBL add(mbei_autocode CHAR(1) DEFAULT 'N' NOT NULL)
 ;
 
+ALTER TABLE USER ADD(USER_NAME VARCHAR2(13)); 
+
 alter TABLE MBEIOS_TBL drop COLUMN mbei_autocode;
 
 alter TABLE MBEIOS_TBL MODIFY( MBEI_ADDR1ST VARCHAR2(2000));
@@ -538,6 +540,56 @@ CREATE TABLE ADMIN_TBL(
 	ADMIN_NAME			VARCHAR2(15)						NOT NULL,
 	ADMIN_DATE_LATE	DATE DEFAULT	SYSDATE			NOT NULL
 );
+
+update ADMIN_TBL
+    set ADMIN_RIGHT = 'Y'
+where ADMIN_ID = 'admin3'
+;
+
+update mbeios_tbl
+    set MBEI_EMAIL = #{mbei_email}
+    ,   MBEI_ZIPCODE = #{mbei_zipcode}
+    ,   MBEI_ADDR1ST = #{mbei_addr1st}
+    ,   MBEI_ADDR2ND = #{mbei_addr2nd}
+    ,   MBEI_PHONENUM = #{mbei_phonenum}
+    ,   MBEI_NICKNAME_U = #{mbei_nickname_u}
+    ,   MBEI_APPROVAL = #{mbei_approval}
+    ,   MBEI_DATE_UP = sysdate
+where MBEI_ID = #{mbei_id}
+
+
+
+alter TABLE ADMIN_TBL add(ADMIN_PHONENUM CHAR(1) DEFAULT 'N' NOT NULL)
+;
+
+alter TABLE PRODUCTEI_TBL add(CAT_CODE_prt  VARCHAR2(20) NOT NULL)
+;
+
+
+-- 관리자모드 추가
+alter TABLE ADMIN_TBL add(ADMIN_PHONENUM VARCHAR2(50))
+;
+
+alter TABLE ADMIN_TBL add(ADMIN_EMAIL VARCHAR2(100))
+;
+
+alter TABLE ADMIN_TBL add(ADMIN_RIGHT CHAR(1) DEFAULT 'N' NOT NULL)
+;
+
+select admin_id, admin_pw, admin_name, admin_date_late
+from admin_tbl
+where admin_id = 'admin2' and admin_pw = '123456'
+;
+
+select admin_id, admin_pw, admin_name, admin_right, admin_date_late
+from admin_tbl
+where admin_id = 'admin2' and admin_pw = '123456' and admin_right = 'N'
+;
+
+
+
+MBEI_PHONENUM
+MBEI_EMAIL
 
 --4. 관리자 계정 추가  ADMIN_TBL
 INSERT INTO ADMIN_TBL(admin_id, ADMIN_PW, ADMIN_NAME)

@@ -98,7 +98,7 @@
 							</div>
 							<div class="form-group">
 								<label for="inputPasswordCheck">* 변경할 비밀번호 확인</label> <input
-									type="password" class="form-control" id="mbei_password_check"
+									type="password" class="form-control" id="mbei_password_check" name="mbei_password_check"
 									placeholder="비밀번호 확인을 위해 다시한번 입력 해 주세요" style="max-width: 630px;" >
 							</div>
 							</div>

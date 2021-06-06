@@ -275,7 +275,8 @@ desired effect
 				  
 				  <c:forEach items="${adReview_list }" var="arvVO" varStatus="status">
 				    <tr>
-				      <td><a class="move_mbei_id" href="${arvVO.mbei_id }"><c:out value="${arvVO.mbei_id }"></c:out></a></td>
+				      <%--<td><a class="move_mbei_id" href="${arvVO.mbei_id }"><c:out value="${arvVO.mbei_id }"></c:out></a></td> --%>
+				      <td><c:out value="${arvVO.mbei_id }"></c:out></td>
 				      <td><c:out value="${arvVO.rv_score }"></c:out></td>
 				      <td><a class="move_rv_num" href="${arvVO.rv_num }"><c:out value="${arvVO.rv_contects }"></c:out></a></td>
 				      <td><fmt:formatDate pattern="yyyy-MM-dd" value="${arvVO.brd_date_reg }"/></td>

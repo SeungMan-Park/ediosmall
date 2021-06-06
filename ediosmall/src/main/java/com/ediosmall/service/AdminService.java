@@ -4,12 +4,19 @@ import java.util.List;
 
 import com.ediosmall.domain.AdminVO;
 import com.ediosmall.domain.MbeiosVO;
+import com.ediosmall.dto.AdminDTO;
 import com.ediosmall.dto.Criteria;
 
 public interface AdminService {
 	
 	// 로그인
 	public AdminVO login_check(AdminVO vo) throws Exception;
+	
+	// 인증용
+	public AdminVO adLogin_dto_ok(AdminDTO dto) throws Exception;
+	
+	// 로그인 - 권한체크
+	public AdminVO loginRight_check(AdminVO vo) throws Exception;
 	
 	// 관리자 회원가입
 	public void join(AdminVO vo) throws Exception;	
@@ -40,5 +47,19 @@ public interface AdminService {
 	
 	// 관리자_사용자 계정 삭제 정보 삭제처리
 	public void user_delete(String mbei_name) throws Exception;	
+	
+	public List<AdminVO> admin_list(Criteria cri) throws Exception;
+	
+	public int getTotalCountAdmin_list(Criteria cri) throws Exception;
+	
+	// 관리자 회원관리_권한부여
+	public void adminRightChange(AdminVO vo) throws Exception;
+	
+	// 관리자 비밀번호 변경
+	public void modify_pw(AdminVO vo) throws Exception;
+	
+	// 관리자 회원 탈퇴
+	public void adDeleteAdmin(String admin_id) throws Exception;
+	
 
 }
